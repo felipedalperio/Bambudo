@@ -2,6 +2,7 @@ import { StyleSheet, View, Text, StatusBar, ScrollView } from 'react-native'
 import { useState, useEffect, useContext } from "react";
 import Slide from "./src/pages/Slide";
 import Create from "./src/pages/Create";
+import Notification from "./src/pages/Notification";
 import Login from "./src/pages/Login";
 import store from "./src/store/store";
 import Tabs from "./src/components/Navigation";
@@ -14,13 +15,14 @@ import Loading from "./src/pages/Loading";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { color } from './src/config/color';
 import { ThemeContext, ThemeProvider } from './src/store/ThemeContext';
+import { NavigationStack } from './src/components/NavigationStack';
 
 
 const Stack = createStackNavigator();
 
 export default function App() {
   const [userAuth, setUserAuth] = useState(null)
-  
+
 
   const MyStatusBar = ({ backgroundColor, ...props }) => (
     <View style={[styles.statusBar, { backgroundColor }]}>
@@ -60,7 +62,7 @@ export default function App() {
             <Loading />
           )}
           {userAuth == true && (
-            <Tabs changeUserAuth={changeUserAuth} />
+            <NavigationStack changeUserAuth={changeUserAuth} />
           )}
 
           {userAuth == false &&
@@ -89,6 +91,7 @@ export default function App() {
                     headerShown: false
                   }}
                 />
+              
               </Stack.Navigator>
             )
           }

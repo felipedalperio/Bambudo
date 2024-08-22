@@ -10,13 +10,13 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import { useNavigation } from '@react-navigation/native';
 import { ThemeContext } from '../../store/ThemeContext';
 import { setUserCurrent } from '../../config/setUserCurrent';
+import PostLoader from '../../components/PostLoader';
 
 export default function Liked() {
   const userRedux = useSelector(selectUser);
   const database = firebase.firestore();
   const [loading, setLoading] = useState(false)
   const [post, setPost] = useState([])
-  const navigation = useNavigation()
   const { theme } = useContext(ThemeContext);
   const setUser = setUserCurrent();
 
@@ -24,34 +24,38 @@ export default function Liked() {
     try {
       database.collection('users').doc(userRedux.id).onSnapshot((docRef) => {
         const list = [];
-        setPost([])
-        docRef.data().postsLiked.forEach((index, key) => {
-          if(key == 0){ setLoading(true) }
+        setPost([]);
+  
+        // Inverte a ordem dos documentos em postsLiked
+        const reversedPostsLiked = [...docRef.data().postsLiked].reverse();
+  
+        reversedPostsLiked.forEach((index, key) => {
+          if (key === 0) {
+            setLoading(true);
+          }
+  
           database.collection("posts").doc(index).get().then((doc) => {
-            if (doc.data()) {
-              if(doc.data().lock == false){ //pegar apenas os publicos
-                list.push({ ...doc.data(), id: doc.id })
-                setPost(list)
-                setLoading(false)
-              }
+            if (doc.data() && !doc.data().lock) { // Considerando apenas documentos não bloqueados
+              list.push({ ...doc.data(), id: doc.id });
+              setPost(list);
+              setLoading(false);
             }
-          }).catch(()=> {
-            setLoading(false)
-            Alert.alert('Oops, algo deu errado.')
-          })
-        })
-      })
-    }catch(err){
-      setLoading(false)
-      Alert.alert('Oops, algo deu errado.')
+          }).catch(() => {
+            setLoading(false);
+            Alert.alert('Oops, algo deu errado.');
+          });
+        });
+      });
+    } catch (err) {
+      setLoading(false);
+      Alert.alert('Oops, algo deu errado.');
     }
-  }, [userRedux])
-
+  }, [userRedux]);
+  
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     setUser(userRedux.id);
-  }, [])
-
+  }, []);
 
 
 /*
@@ -69,7 +73,7 @@ export default function Liked() {
       </View>
       <View style={styles.posts}>
         {loading && (
-          <ActivityIndicator size={54} color={theme.primaryColorDark} style={styles.progressBar} />
+          <PostLoader/>
         )}
         {post.length > 0 ? (
           <FlatList

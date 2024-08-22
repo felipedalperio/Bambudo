@@ -31,9 +31,11 @@ export default function NewPost({ route }) {
   const { theme } = useContext(ThemeContext);
 
   useEffect(() => {
-    navigation?.setOptions({
-      tabBarStyle: { display: 'none' },
-    });
+    if(navigation){
+      navigation?.setOptions({
+        tabBarStyle: { display: 'none' },
+      });
+    }
   }, []);
 
   const changeShow = () => {

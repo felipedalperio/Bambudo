@@ -3,8 +3,7 @@ import { StyleSheet } from "react-native"
 const styles = StyleSheet.create({
     container:{
         backgroundColor:'#fff',
-        flex:1,
-        
+        flex:1, 
     },
     categories:{
         flexDirection:'row',
@@ -14,8 +13,6 @@ const styles = StyleSheet.create({
         zIndex:1,
         width:'100%',
         height:70
-        
-     
     },
     select:{
         width:150,
@@ -66,19 +63,22 @@ const styles = StyleSheet.create({
     posts:{
         paddingHorizontal:10,
         marginTop:20,
-        flex: 1
-        
+        flex: 1,
+        flexDirection:'column',
+    
     },
     selectText:{
         fontWeight:'500',
         color:'white'
     },
     empty:{
-        fontWeight:'400',
-        letterSpacing:2,
-        padding:20,
-        fontSize:18,
-        textAlign:"center"
+       fontWeight:'400',
+       letterSpacing:2,
+       padding:20,
+       fontSize:18,
+       position:"absolute",
+       textAlign:"center",
+       width:'100%'
     }
    
 })

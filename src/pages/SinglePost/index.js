@@ -25,7 +25,7 @@ export default function SinglePost({ route }) {
   const [listComments, setListComments] = useState([]);
   const [like, setLike] = useState(route.params.like);
   const [commentsCount, setCommentsCount] = useState(0)
-  const [lock, setLock] = useState(post.lock)
+  const [lock, setLock] = useState(route.params.lock)
   const [sendLoading, setSendLoading] = useState(false);
   const [num, setNum] = useState(route.params.numberLikes);
   const { theme } = useContext(ThemeContext);
@@ -139,6 +139,7 @@ export default function SinglePost({ route }) {
 
   const updateLock = () => {
     setLock(!lock)
+    route.params.setLock(!lock)
   }
 
   useEffect(() => {

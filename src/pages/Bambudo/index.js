@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity, FlatList, SafeAreaView, Alert, ActivityIndicator, Platform } from 'react-native'
+import { View, Text, Image, TouchableOpacity, FlatList, SafeAreaView, Alert, ActivityIndicator, Platform, ScrollView } from 'react-native'
 import styles from './style'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
@@ -16,6 +16,7 @@ import { color } from '../../config/color';
 import { ThemeContext } from '../../store/ThemeContext'
 import { setUserCurrent } from '../../config/setUserCurrent'
 import Header from '../../components/Header'
+import PostLoader from '../../components/PostLoader'
 
 //import { BannerAd, BannerAdSize, TestIds, InterstitialAd, AdEventType, RewardedInterstitialAd, RewardedAdEventType } from 'react-native-google-mobile-ads';
 
@@ -39,12 +40,13 @@ export default function Bambudo() {
   const [showData, setShowData] = useState(false)
   const [nameCat, setNameCat] = useState('Categorias')
   const [nameData, setNameData] = useState('Data');
-  let ads = null;
+  const [firstLoad, setFirstLoad] = useState(true);
+  //let ads = null;
   let BannerAd = null
-
+  //
   if (Platform.OS !== 'web') {
-    ads = require('react-native-google-mobile-ads');
-    BannerAd = ads.BannerAd;
+    //ads = require('react-native-google-mobile-ads');
+    //BannerAd = ads.BannerAd;
   }
 
   const today = new Date();
@@ -109,36 +111,34 @@ export default function Bambudo() {
   }, [nameCat, nameData])
 
   const filterData = (value) => {
-    let query = database.collection("posts").limit(10).where('lock', '==', false);
+    let query = database.collection("posts").limit(10).where('lock', '==', false).orderBy('dataFilter', 'desc');
 
     if (nameData) {
       if (nameData == 'Hoje') {
-        query = query.where('data', '==', dataAtualFormatada()).orderBy('dataFilter', 'desc');
+        query = query.where('data', '==', dataAtualFormatada());
       } else if (nameData == 'Ontem') {
-        query = query.where('data', '==', dataAtualFormatadaOntem()).orderBy('dataFilter', 'desc');
+        query = query.where('data', '==', dataAtualFormatadaOntem());
       } else if (nameData == 'Esse Mês') {
-        query = query.where('data', '>=', dataMouthFistDay()).where('data', '<=', dataMouthLastDay()).orderBy('data', 'desc');
-      }else{
-        query = query.orderBy("dataFilter", "desc");
+        query = query.where('data', '>=', dataMouthFistDay()).where('data', '<=', dataMouthLastDay());
       }
     }
-  
-    if(nameCat){
+
+    if (nameCat) {
       if (nameCat != 'Todos' && nameCat != 'Categorias') {
         query = query.where('cat', '==', nameCat);
       }
     }
 
-    if( value == true){
-      if(lastVisible){
+    if (value == true) {
+      if (lastVisible) {
         query = query.startAfter(lastVisible);
       }
     }
-  
+
     return query.get();
-    
+
   }
-  
+
 
   const fetchMore = async () => {
     if (lastVisible && loading == false) {
@@ -210,7 +210,7 @@ export default function Bambudo() {
 
   return (
     <View style={styles.container}>
-      { BannerAd != null && (
+      {BannerAd != null && (
         <BannerAd
           unitId={ads.TestIds.BANNER}
           size={ads.BannerAdSize.FULL_BANNER}
@@ -263,26 +263,35 @@ export default function Bambudo() {
           </View>
         </View>
       </View>
-      <View style={styles.posts} >
-
-        {post.length != 0 ? (
-          <FlatList
+      <View style={styles.posts}>
+       
+         <FlatList
             ref={flatListRef}
             showsVerticalScrollIndicator={false}
             data={post}
             onEndReached={fetchMore}
             keyExtractor={item => item.id}
-            onEndReachedThreshold={0.5}
+            onEndReachedThreshold={0.9}  // Ajuste conforme necessário (0.1 significa 10% do final)
             onScroll={handleScroll}
             renderItem={({ item }) => {
               return (
                 <Post item={item} database={database} post={post} setPost={setPost} />
               )
             }}
+            ListFooterComponent={
+              loading && (
+                !lastVisible ? (
+                  <>
+                    <PostLoader />
+                  </>
+                ) : (
+                 <PostLoader limit={true}/>
+                )
+              )
+            }
           />
-
-        ) : (
-
+      
+       {post.length == 0 && (
           <Text style={{ ...styles.empty, color: theme.textColor }}>
             {
               loading != true && "Nenhuma Postagem encontrada."
@@ -290,9 +299,7 @@ export default function Bambudo() {
 
           </Text>
         )}
-        {loading && (
-          <ActivityIndicator size={54} color={theme.primaryColor} style={styles.progressBar} />
-        )}
+
       </View>
 
     </View>

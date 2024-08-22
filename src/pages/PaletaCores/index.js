@@ -7,14 +7,14 @@ import { useContext, useEffect, useState } from 'react';
 import { useIsFocused } from '@react-navigation/native';
 import { ThemeContext } from '../../store/ThemeContext';
 import { FlatList } from 'react-native-gesture-handler';
-import { RewardedAd, RewardedAdEventType, TestIds } from 'react-native-google-mobile-ads';
+//import { RewardedAd, RewardedAdEventType, TestIds } from 'react-native-google-mobile-ads';
 
-  const adUnitId =  TestIds.REWARDED;
+ //const adUnitId =  TestIds.REWARDED;
 
-  const rewarded = RewardedAd.createForAdRequest(adUnitId, {
-    requestNonPersonalizedAdsOnly: true,
-    keywords: ['fashion', 'clothing'],
-  });
+ //const rewarded = RewardedAd.createForAdRequest(adUnitId, {
+ //  requestNonPersonalizedAdsOnly: true,
+ //  keywords: ['fashion', 'clothing'],
+ //});
 
 
 export default function PalletaCores({ show, setShow, setColor }) {
@@ -28,24 +28,24 @@ export default function PalletaCores({ show, setShow, setColor }) {
   }
 
   useEffect(() => {
-    const unsubscribeLoaded = rewarded.addAdEventListener(RewardedAdEventType.LOADED, () => {
-        rewarded.show();
-    });
-    const unsubscribeEarned = rewarded.addAdEventListener(
-      RewardedAdEventType.EARNED_REWARD,
-      reward => {
-        console.log('User earned reward of ', reward);
-      },
-    );
+    //const unsubscribeLoaded = rewarded.addAdEventListener(RewardedAdEventType.LOADED, () => {
+    //    rewarded.show();
+    //});
+    //const unsubscribeEarned = rewarded.addAdEventListener(
+    //  RewardedAdEventType.EARNED_REWARD,
+    //  reward => {
+    //    console.log('User earned reward of ', reward);
+    //  },
+    //);
 
     // Start loading the rewarded ad straight away
-    rewarded.load();
-
-    // Unsubscribe from events on unmount
-    return () => {
-      unsubscribeLoaded();
-      unsubscribeEarned();
-    };
+    //rewarded.load();
+//
+    //// Unsubscribe from events on unmount
+    //return () => {
+    //  unsubscribeLoaded();
+    //  unsubscribeEarned();
+    //};
   }, [isFocused]);
 
   return (

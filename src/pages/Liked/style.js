@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     posts:{
         paddingHorizontal:20,
         paddingVertical:10,
-        flex:1,
+        flex:1
         
     },
     titleGroup:{

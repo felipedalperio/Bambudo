@@ -4,7 +4,7 @@ const styles = StyleSheet.create({
     container: {
         position: 'absolute',
         margin: 'auto',
-        width: '80%',
+        width: '80%', 
         alignItems: "center",
         borderRadius:20,
         backgroundColor: '#EAEAEA',

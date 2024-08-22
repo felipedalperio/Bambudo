@@ -16,6 +16,7 @@ export default function Post({ item, database, post, setPost }) {
   const navigation = useNavigation();
   const [like, setLike] = useState(false)
   const [num, setNum] = useState(item.whoLiked.length)
+  const [lock, setLock] = useState(item.lock)
   const [commentsCount, setCommentsCount] = useState(item.comments)
   const { theme } = useContext(ThemeContext);
 
@@ -62,13 +63,13 @@ export default function Post({ item, database, post, setPost }) {
   }
 
   const goSinglePost = () => {
-    navigation.navigate('SinglePost', { post: item, like: like, numberLikes: num, setNumHome: setNum, setLikeHome: setLike, setCommentsCount: setCommentsCount })
+    navigation.navigate('SinglePost', { post: item, like: like, numberLikes: num, setNumHome: setNum, setLikeHome: setLike, setCommentsCount: setCommentsCount, setLock: setLock, lock: lock })
   }
   return (
     <TouchableOpacity style={styles.post} onPress={() => goSinglePost()}>
       <View style={styles.catGroup}>
         <View style={styles.catLeft}>
-          <Text style={{fontWeight: item.lock ? 'bold' : '400'}}>{item.lock ? 'Privado' : 'Público'}</Text>
+          <Text style={{fontWeight: lock ? 'bold' : '400'}}>{lock ? 'Privado' : 'Público'}</Text>
         </View>
         <View style={styles.catRight}> 
           <TouchableOpacity onPress={() => removePost(item.id)}>

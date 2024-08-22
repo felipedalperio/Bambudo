@@ -99,7 +99,7 @@ export default function Menu({ title, desc, emoji, cat, setDesc, setTitle, updat
         setTitle("");
         setLoading(false)
         setAds(false)
-        navigation.navigate("Profile");
+        navigation.navigate("Profile", { refresh: true });
       }).catch((error) => {
         setLoading(false)
         setAds(false)
@@ -132,7 +132,7 @@ export default function Menu({ title, desc, emoji, cat, setDesc, setTitle, updat
       setTitle("");
       setLoading(false)
       setAds(false)
-      navigation.navigate("Profile");
+      navigation.navigate("Profile", { refresh: true });
     }).catch((error) => {
       setLoading(false)
       setAds(false)

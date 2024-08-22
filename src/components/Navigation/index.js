@@ -23,6 +23,7 @@ const Tabs = ({changeUserAuth}) => {
   return (
     <Tab.Navigator
       initialRouteName='Bambudo'
+      backBehavior='history' // Permite voltar corretamente na ordem de navegação
       tabBarOptions={{ showLabel: false }}
       screenOptions={{
         showLabel: false,
@@ -59,8 +60,9 @@ const Tabs = ({changeUserAuth}) => {
         }}
         
       />
-      <Tab.Screen name="Bambudo" component={NavigationStack} lazy={true} options={({ route }) => ({
+      <Tab.Screen name="Bambudo" component={Bambudo} lazy={true} options={({ route }) => ({
         headerShown: false,
+        unmountOnBlur: true,
         tabBarStyle: ((route) => {
           const routeName = getFocusedRouteNameFromRoute(route) 
           if (routeName === 'SinglePost') {

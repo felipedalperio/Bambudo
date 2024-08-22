@@ -9,6 +9,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import { color } from '../../config/color';
 import { ThemeContext } from '../../store/ThemeContext';
 import { setUserCurrent } from '../../config/setUserCurrent';
+import PostLoader from '../../components/PostLoader';
 
 export default function Profile() {
   const userRedux = useSelector(selectUser);
@@ -22,36 +23,35 @@ export default function Profile() {
     try {
       database.collection("users").doc(userRedux.id).onSnapshot((docRef) => {
         const list = [];
-        setPost([])
-        setLoading(false)
-        docRef.data().myPosts.forEach((index, key) => {
-          if(key == 0){ setLoading(true) }
+        setLoading(false);
+  
+        const reversedMyPosts = [...docRef.data().myPosts].reverse();
+  
+        reversedMyPosts.forEach((index, key) => {
+          if (key === 0) {
+            setLoading(true);
+          }
+  
           database.collection("posts").doc(index).get().then((doc) => {
             if (doc.data()) {
-              list.push({ ...doc.data(), id: doc.id })
-              setPost(list)
-              setLoading(false)
+              list.push({ ...doc.data(), id: doc.id });
+              setPost(list);
+              setLoading(false);
             }
-            
           }).catch((error) => {
-            setLoading(false)
-            Alert.alert('Oops, algo deu errado.')
+            setLoading(false);
+            Alert.alert('Oops, algo deu errado.');
           });
-        })
+        });
       }).catch((error) => {
-        setLoading(false)
-        Alert.alert('Oops, algo deu errado.')
+        setLoading(false);
+        Alert.alert('Oops, algo deu errado.');
       });
     } catch (error) {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [userRedux])
-
-  useEffect(() => {
-      setLoading(true)
-      setUser(userRedux.id);
-  }, [])
-
+  }, [userRedux]);
+  
 
 
   return (
@@ -62,8 +62,9 @@ export default function Profile() {
       </View>
       <View style={styles.posts}>
         {loading && (
-          <ActivityIndicator size={54} color={theme.primaryColor} style={styles.progressBar} />
+          <PostLoader />
         )}
+      
         {post.length > 0 ? (
           <FlatList
             showsVerticalScrollIndicator={false}
@@ -73,9 +74,7 @@ export default function Profile() {
                 <Post item={item} database={database} post={post} setPost={setPost} />
               )
             }}
-          />
-
-        ) : (
+          />) : (
           <Text style={{...styles.empty, color:theme.textColor}}>
             { !loading && 'Você não possui nenhuma postagem, publique algo =D'}
           </Text>
