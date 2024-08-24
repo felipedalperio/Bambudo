@@ -3,6 +3,8 @@ import { StyleSheet } from "react-native"
 const styles = StyleSheet.create({
     container:{
         backgroundColor:'#fff',
+        flex:1,
+        height:'100%'
     },
     user:{
         flexDirection:'row',
@@ -128,6 +130,28 @@ const styles = StyleSheet.create({
     },
     viewUD:{
         flexDirection:'row', alignItems:'center'
+    },
+    showPicture:{
+        flex:1,
+        width:'100%',
+        height: '100%',
+        position:'absolute',
+        backgroundColor: 'rgba(000, 000, 000, 0.8)',
+        zIndex:999,
+        alignItems:'center',
+        justifyContent:'center',
+        flexDirection:'column',
+    },
+    imageView: {
+        width:'95%',
+        minHeight:300,
+        borderRadius:4,
+        marginHorizontal:20,
+        marginLeft:30,
+        resizeMode:'contain',
+        marginRight:30,
+        zIndex:-1
+        
     }
 
 })

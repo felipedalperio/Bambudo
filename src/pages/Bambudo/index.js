@@ -26,7 +26,7 @@ export default function Bambudo() {
   let dispatch = useDispatch();
   const database = firebase.firestore();
   const [post, setPost] = useState([])
-  const [limit, setLimit] = useState(10)
+  const [limit, setLimit] = useState(20);
   const [loading, setLoading] = useState(false)
   const [scrollPosition, setScrollPosition] = useState(0);
   const navigation = useContext(NavigationContext);
@@ -47,38 +47,6 @@ export default function Bambudo() {
   if (Platform.OS !== 'web') {
     //ads = require('react-native-google-mobile-ads');
     //BannerAd = ads.BannerAd;
-  }
-
-  const today = new Date();
-  function dataAtualFormatada() {
-    var data = new Date(),
-      dia = data.getDate().toString().padStart(2, '0'),
-      mes = (data.getMonth() + 1).toString().padStart(2, '0'), //+1 pois no getMonth Janeiro começa com zero.
-      ano = data.getFullYear();
-    return dia + "/" + mes + "/" + ano;
-  }
-  function dataAtualFormatadaOntem() {
-
-    var data = new Date(),
-      dia = (data.getDate() - 1).toString().padStart(2, '0'),
-      mes = (data.getMonth() + 1).toString().padStart(2, '0'), //+1 pois no getMonth Janeiro começa com zero.
-      ano = data.getFullYear();
-
-    return dia + "/" + mes + "/" + ano;
-  }
-  function dataMouthFistDay() {
-    var data = new Date(),
-      dia = '01',
-      mes = (data.getMonth() + 1).toString().padStart(2, '0'), //+1 pois no getMonth Janeiro começa com zero.
-      ano = data.getFullYear();
-    return dia + "/" + mes + "/" + ano;
-  }
-  function dataMouthLastDay() {
-    var data = new Date(),
-      dia = '31',
-      mes = (data.getMonth() + 1).toString().padStart(2, '0'), //+1 pois no getMonth Janeiro começa com zero.
-      ano = data.getFullYear();
-    return dia + "/" + mes + "/" + ano;
   }
 
   useEffect(() => {
@@ -110,34 +78,24 @@ export default function Bambudo() {
 
   }, [nameCat, nameData])
 
-  const filterData = (value) => {
-    let query = database.collection("posts").limit(10).where('lock', '==', false).orderBy('dataFilter', 'desc');
+  const filterData = async (value) => {
+    let query = database.collection("posts")
+      .limit(limit)  // Atualiza o limite para 20 postagens
+      .where('lock', '==', false)
+      .orderBy('dataFilter', 'desc');
 
-    if (nameData) {
-      if (nameData == 'Hoje') {
-        query = query.where('data', '==', dataAtualFormatada());
-      } else if (nameData == 'Ontem') {
-        query = query.where('data', '==', dataAtualFormatadaOntem());
-      } else if (nameData == 'Esse Mês') {
-        query = query.where('data', '>=', dataMouthFistDay()).where('data', '<=', dataMouthLastDay());
-      }
+    if (nameCat && nameCat !== 'Todos' && nameCat !== 'Categorias') {
+      query = query.where('cat', '==', nameCat);
     }
 
-    if (nameCat) {
-      if (nameCat != 'Todos' && nameCat != 'Categorias') {
-        query = query.where('cat', '==', nameCat);
-      }
-    }
-
-    if (value == true) {
+    if (value) { // Se for um carregamento adicional
       if (lastVisible) {
         query = query.startAfter(lastVisible);
       }
     }
 
     return query.get();
-
-  }
+  };
 
 
   const fetchMore = async () => {
@@ -245,7 +203,7 @@ export default function Bambudo() {
           </View>
         </View>
         <View>
-          <View style={{ ...styles.select, backgroundColor: theme.primaryColor, right: 0 }}>
+          <View style={{ ...styles.select, backgroundColor: theme.primaryColor, right: 0, display:'none' }}>
             <TouchableOpacity style={styles.dataTop} onPress={showDate}>
               <Text style={styles.selectText}>{nameData}</Text>
               <Icon name='caret-down' size={20} color="white" />
@@ -271,7 +229,7 @@ export default function Bambudo() {
             data={post}
             onEndReached={fetchMore}
             keyExtractor={item => item.id}
-            onEndReachedThreshold={0.9}  // Ajuste conforme necessário (0.1 significa 10% do final)
+            onEndReachedThreshold={1.5}  // Ajuste conforme necessário (0.1 significa 10% do final)
             onScroll={handleScroll}
             renderItem={({ item }) => {
               return (

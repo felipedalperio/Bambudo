@@ -27,8 +27,6 @@ export function setUserCurrent() {
                     }).catch((error) => { //não conseguiu recuperar o usuario
                         Alert.alert('Oops algo deu errado')
                     })
-                } else {
-                    Alert.alert('Você não está logado.')
                 }
             }).catch((err) => {//não conseguiu recuperar o usuario
                 Alert.alert('Oops algo deu errado')

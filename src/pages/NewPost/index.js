@@ -31,11 +31,13 @@ export default function NewPost({ route }) {
   const { theme } = useContext(ThemeContext);
 
   useEffect(() => {
-    if(navigation){
-      navigation?.setOptions({
-        tabBarStyle: { display: 'none' },
-      });
-    }
+    try{
+      if(navigation){
+        navigation?.setOptions({
+          tabBarStyle: { display: 'none' },
+        });
+      }
+    }catch(error){}
   }, []);
 
   const changeShow = () => {
@@ -49,14 +51,18 @@ export default function NewPost({ route }) {
   }
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('blur', e => {
-      route.params = {},
-        setShowUpdateBar(null)
-      setTitle(''),
-        setDesc('')
-    });
+    try{
+      if(navigation){
+        const unsubscribe = navigation.addListener('blur', e => {
+          route.params = {},
+            setShowUpdateBar(null)
+          setTitle(''),
+            setDesc('')
+        });
+        return unsubscribe;
+      }
+    }catch(error){}
 
-    return unsubscribe;
   }, []);
 
   useEffect(() => {
@@ -64,23 +70,27 @@ export default function NewPost({ route }) {
   }, [route.params])
 
   const paramsVerify = () => {
-    if (route.params) {
-      if (route.params.post) {
-        setTitle(route.params.post.title)
-        setDesc(route.params.post.desc)
-        setEmoji(route.params.post.emoji)
-        setCat(route.params.post.cat)
-        setShowUpdateBar(route.params.post)
-        setLock(route.params.post.lock)
+    try{
+      if (route.params) {
+        if (route.params.post) {
+          setTitle(route.params.post.title)
+          setDesc(route.params.post.desc)
+          setEmoji(route.params.post.emoji)
+          setCat(route.params.post.cat)
+          setShowUpdateBar(route.params.post)
+          setLock(route.params.post.lock)
+        } else {
+          setTitle("")
+          setDesc("")
+          setShowUpdateBar(false)
+        }
       } else {
         setTitle("")
         setDesc("")
         setShowUpdateBar(false)
       }
-    } else {
-      setTitle("")
-      setDesc("")
-      setShowUpdateBar(false)
+    }catch(err){
+
     }
   }
 
@@ -98,7 +108,7 @@ export default function NewPost({ route }) {
         setTitle={setTitle} />
 
       {showUpdateBar && (
-        <View style={styles.titleGroup}>
+        <View style={{...styles.titleGroup, backgroundColor: theme.primaryColor }}>
           <Text style={styles.textTitle}>Você esta na tela de atualização</Text>
           <Icon name='edit' size={20} color="white" style={{ marginLeft: 10 }} />
         </View>

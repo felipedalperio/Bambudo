@@ -25,7 +25,7 @@ export default function Profile() {
         const list = [];
         setLoading(false);
   
-        const reversedMyPosts = [...docRef.data().myPosts].reverse();
+        const reversedMyPosts = [...docRef.data().myPosts];
   
         reversedMyPosts.forEach((index, key) => {
           if (key === 0) {

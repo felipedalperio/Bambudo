@@ -14,7 +14,9 @@ import { ThemeContext } from '../../store/ThemeContext'
 export default function Post({ item, database, post, setPost }) {
   const userRedux = useSelector(selectUser);
   const navigation = useNavigation();
-  const [like, setLike] = useState(false)
+  const [like, setLike] = useState(false);
+  const [readMore, setReadMore] = useState(9)
+  const [showReadMore, setShowReadMore] = useState(false)
   const [num, setNum] = useState(item.whoLiked.length)
   const [lock, setLock] = useState(item.lock)
   const [commentsCount, setCommentsCount] = useState(item.comments)
@@ -29,7 +31,7 @@ export default function Post({ item, database, post, setPost }) {
 
   const likePostMethod = async (value) => {
     setLike(value)
-    likePost(item, userRedux.id, value) //salvando no banco
+    await likePost(item, userRedux.id, value) //salvando no banco
     if (value == false) {
       setNum(num == 0 ? 0 : num - 1)
     } else {
@@ -65,6 +67,17 @@ export default function Post({ item, database, post, setPost }) {
   const goSinglePost = () => {
     navigation.navigate('SinglePost', { post: item, like: like, numberLikes: num, setNumHome: setNum, setLikeHome: setLike, setCommentsCount: setCommentsCount, setLock: setLock, lock: lock })
   }
+
+  const readMoreClick = () => {
+    setReadMore((prev) => prev == 9 ? 20 : 9)
+  }
+
+  const onTextLayout = (e) => {
+    const { lines } = e.nativeEvent;
+    if (lines.length > 9) {
+      setShowReadMore(true)
+    }
+  };
   return (
     <TouchableOpacity style={styles.post} onPress={() => goSinglePost()}>
       <View style={styles.catGroup}>
@@ -95,9 +108,9 @@ export default function Post({ item, database, post, setPost }) {
       </View>
       <View style={styles.content}>
         <Text style={{ ...styles.title, color: theme.primaryColorDark2 }}>{item.title}</Text>
-        <Text style={{ ...styles.desc, color: theme.textColor }} numberOfLines={9} ellipsizeMode="tail">{item.desc}</Text>
-        <TouchableOpacity onPress={() => goSinglePost()}>
-          <Text style={{ ...styles.more, color: theme.primaryColorDark2 }}>Ler mais.</Text>
+        <Text style={{ ...styles.desc, color: theme.textColor }} numberOfLines={readMore} ellipsizeMode="tail" onTextLayout={onTextLayout}>{item.desc}</Text>
+        <TouchableOpacity onPress={() => readMoreClick()}>
+          <Text style={{ ...styles.more, color: theme.primaryColorDark2, display:`${showReadMore ? 'flex' : 'none'}` }}>{readMore > 9? 'Ler Menos' : 'Ler Mais'}</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.infoPost}>

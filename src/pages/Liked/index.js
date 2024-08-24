@@ -21,36 +21,40 @@ export default function Liked() {
   const setUser = setUserCurrent();
 
   useEffect(() => {
-    try {
-      database.collection('users').doc(userRedux.id).onSnapshot((docRef) => {
-        const list = [];
-        setPost([]);
+    setLoading(true); // Definir loading para true ao iniciar a operação
   
-        // Inverte a ordem dos documentos em postsLiked
-        const reversedPostsLiked = [...docRef.data().postsLiked].reverse();
+    const fetchData = async () => {
+      try {
+        const docRef = await database.collection('users').doc(userRedux.id).get();
   
-        reversedPostsLiked.forEach((index, key) => {
-          if (key === 0) {
-            setLoading(true);
-          }
+        if (docRef.exists) {
+          const list = [];
+          const reversedPostsLiked = [...docRef.data().postsLiked];
   
-          database.collection("posts").doc(index).get().then((doc) => {
-            if (doc.data() && !doc.data().lock) { // Considerando apenas documentos não bloqueados
-              list.push({ ...doc.data(), id: doc.id });
-              setPost(list);
-              setLoading(false);
-            }
-          }).catch(() => {
-            setLoading(false);
-            Alert.alert('Oops, algo deu errado.');
-          });
-        });
-      });
-    } catch (err) {
-      setLoading(false);
-      Alert.alert('Oops, algo deu errado.');
-    }
+          await Promise.all(
+            reversedPostsLiked.map(async (index) => {
+              const doc = await database.collection("posts").doc(index).get();
+  
+              if (doc.exists && doc.data() && !doc.data().lock) {
+                list.push({ ...doc.data(), id: doc.id });
+              }
+            })
+          );
+  
+          setPost(list);
+        }
+  
+        setLoading(false); // Certifique-se de definir loading como false após o loop
+  
+      } catch (err) {
+        setLoading(false);
+        Alert.alert('Oops, algo deu errado.');
+      }
+    };
+  
+    fetchData();
   }, [userRedux]);
+  
   
   useEffect(() => {
     setLoading(true);

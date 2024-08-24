@@ -7,12 +7,14 @@ const styles = StyleSheet.create({
     },
     categories:{
         flexDirection:'row',
-        paddingVertical:25,
+        paddingBottom:30,
         paddingHorizontal:10,
         justifyContent:'space-between',
         zIndex:1,
-        width:'100%',
-        height:70
+        width:'100%'
+    },
+    catWrapper:{
+        display:'flex'
     },
     select:{
         width:150,

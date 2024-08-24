@@ -15,7 +15,8 @@ const styles = StyleSheet.create({
         alignItems:'center'
     },  
     more:{
-        marginTop:10
+        marginTop:10,
+        display:'none'
     },
     cat:{
         textAlign:'right'

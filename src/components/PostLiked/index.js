@@ -22,12 +22,16 @@ export default function PostLiked({ item, database, post }) {
   },[item.whoLiked.includes(userRedux.id)])
 
   const likePostMethod = async (value) => {
-    setLike(value)
-    likePost(item, userRedux.id, value) //salvando no banco
-    if(value == false){
-      setNum(num == 0 ? 0 : num - 1)
-    }else{
-      setNum(num + 1)
+    try{
+      setLike(value)
+      await likePost(item, userRedux.id, value) //salvando no banco
+      if(value == false){
+        setNum(num == 0 ? 0 : num - 1)
+      }else{
+        setNum(num + 1)
+      }
+    }catch(err){
+
     }
   }
 

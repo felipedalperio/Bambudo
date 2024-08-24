@@ -12,12 +12,12 @@ export default function SlideItem({ props, setIndex, theme }) {
       {props.id != 3
         ? (
           <>
-            <Image style={styles.icon} source={props.icon} />
+            <Image style={styles.icon} source={props.icon} color={theme.primaryColor} />
             <View style={styles.titleGroup}>
               {
                 props.title.map((name, key) => {
                   return (
-                    <Text style={{ ...styles.title, color: props.textColor[key] }} key={key}>{name}</Text>
+                    <Text style={{ ...styles.title, color: `${key == 0 ? theme.primaryColor : '#292929'}` }} key={key}>{name}</Text>
                   )
                 })
 

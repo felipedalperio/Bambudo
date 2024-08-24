@@ -70,24 +70,35 @@ export default function Settings() {
 
   useEffect(() => {
     setUser(userRedux.id);
-    setName(userRedux.name)
-    setImage({ uri: userRedux.picture });
+  
   },[userRedux])
 
   const pickImage = async () => {
+    // Verifique se você tem permissão para acessar a galeria de imagens
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Desculpe, precisamos de permissões para acessar a galeria.');
+      return;
+    }
+  
+    // Abre a biblioteca de imagens
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1
     });
-    if(result.uri){
-      setImage({ uri: result.uri }),
-      uploadImage({ uri: result.uri })
+  
+    // Verifica se a URI da imagem foi retornada
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      const { uri } = result.assets[0];
+      setImage({ uri });
+      uploadImage({ uri }); // Certifique-se de que uploadImage está implementada corretamente
+    } else {
+      Alert.alert('Algo deu errado ou você não selecionou nenhuma imagem.');
     }
-      
   };
-
+  
   const uploadImage = async (imageUp) => {
       setUploading(true);
       const response = await fetch(imageUp.uri);
@@ -198,7 +209,7 @@ export default function Settings() {
       </View>
       <View style={{...styles.bottom, backgroundColor:theme.primaryColor}}>
         <Text style={styles.label}>Nome do Usuário</Text>
-        <TextInput onChangeText={(text) => setName(text)} style={styles.name} placeholder="Digite seu nome" type="text" value={name} />
+        <TextInput onChangeText={(text) => setName(text)} style={styles.name} placeholder="Digite seu nome" type="text" value={name} maxLength={20}  />
         <TouchableOpacity style={styles.save} onPress={updateNameUser} disabled={choose}>
           {choose ? (
             <ActivityIndicator size="small" color={theme.primaryColor}/>

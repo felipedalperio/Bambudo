@@ -6,6 +6,7 @@ import { getFocusedRouteNameFromRoute, useNavigation, useRoute } from '@react-na
 import IconAwesome from 'react-native-vector-icons/FontAwesome'
 import { useContext } from 'react';
 import { ThemeContext } from '../../store/ThemeContext';
+import IconFeather from 'react-native-vector-icons/Feather'
 
 export default function Header() {
     const [image, setImage] = useState('');
@@ -48,9 +49,8 @@ export default function Header() {
 
             <View style={styles.right}>
                 <TouchableOpacity onPress={() => goNotification()} style={{marginRight:20}}>
-                    <View style={{...styles.conter, backgroundColor:theme.primaryColor, opacity:0}}>
-                        <Text style={styles.textConter}>10</Text>
-                    </View>
+                    <IconFeather name="bell" size={25} style={{ marginRight: 10 }} />
+                    <View style={{...styles.conter, opacity:0}}/>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => goSettings()}>
                     <Image style={styles.image} source={image} />
@@ -98,14 +98,15 @@ const styles = StyleSheet.create({
     },
 
     conter:{
-        height:19,
-        width:19,
+        height:12,
+        width:12,
         borderRadius: 10,
         position:'absolute',
         alignItems:'center',
         justifyContent:'center',
-        bottom:0,
-        right:0
+        backgroundColor:'#ff5c33',
+        bottom:2,
+        right:8
     },
     textConter:{
         color:'white',
