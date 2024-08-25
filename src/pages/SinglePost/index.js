@@ -8,13 +8,14 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import { selectUser } from '../../store/userSlice';
 import { useSelector } from 'react-redux';
 import firebase from '../../config/firebaseconfig'
-import likePost from '../../components/likePost/likePost'
+import likePost from '../../controller/likePost/likePost'
 import Comment from '../../components/Comment';
 import { vh } from 'react-native-expo-viewport-units';
 import { useNavigation } from '@react-navigation/native';
 import { color } from '../../config/color';
 import { ThemeContext } from '../../store/ThemeContext';
 import { removeDuplicateSpaces } from '../../config/removeSpaces';
+import notification from '../../controller/notificationPost/notificationPost';
 
 
 
@@ -35,16 +36,19 @@ export default function SinglePost({ route }) {
 
   const likeMethod = (value) => {
     setLike(value)
-    route.params.setLikeHome(value)
-    likePost(post, userRedux.id, value)
-    if (value == false) {
-      let number = num == 0 ? 0 : num - 1
-      setNum(number)
-      route.params.setNumHome(number)
-    } else {
-      let number = num + 1;
-      setNum(number)
-      route.params.setNumHome(number)
+    if(route.params.setLikeHome){
+      route.params.setLikeHome(value)
+      likePost(post, userRedux.id, value)
+      if (value == false) {
+        let number = num == 0 ? 0 : num - 1
+        setNum(number)
+        route.params.setNumHome(number)
+      } else {
+        let number = num + 1;
+        setNum(number)
+        route.params.setNumHome(number)
+        notification(0, userRedux, post);
+      }
     }
   }
 
@@ -100,6 +104,7 @@ export default function SinglePost({ route }) {
         setSendLoading(false)
         setListComments([...listComments, data])
         updateNumComment(true)
+        notification(1, userRedux, post);
       }).catch((error) => {
         Alert.alert('Oops, algo deu errado.')
         setSendLoading(false)
@@ -141,8 +146,10 @@ export default function SinglePost({ route }) {
   }
 
   const updateLock = () => {
-    setLock(!lock)
-    route.params.setLock(!lock)
+    if(route.params.setLock){
+      setLock(!lock)
+      route.params.setLock(!lock)
+    }
   }
 
   const openImage = () => {

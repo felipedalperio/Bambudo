@@ -2,11 +2,17 @@ import { Text, View, Image, TouchableOpacity } from 'react-native';
 import Login from '../../pages/Login';
 import styles from './style';
 import { vw } from 'react-native-expo-viewport-units';
+import { useEffect } from 'react';
 
-export default function SlideItem({ props, setIndex, theme }) {
+export default function SlideItem({ props, index, setIndex, theme, scrollRef}) {
   const SlidePosition = () => {
-    setIndex(props.id + 1)
+    if (scrollRef.current) {
+      let currentIndex = scrollRef.current.getCurrentIndex();
+      setIndex(currentIndex + 1)
+      scrollRef.current.scrollToIndex({index: currentIndex + 1})
+    }
   }
+
   return (
     <View style={{ ...styles.container, width: vw(100) }}>
       {props.id != 3

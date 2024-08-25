@@ -50,8 +50,10 @@ const styles = StyleSheet.create({
     },  
     desc:{
         paddingHorizontal:10,
+        marginLeft:4,
         outlineStyle: 'none',
         color:'#838383',
+        flex:1,
         fontSize:18,
         textAlignVertical: "top",
         marginBottom:50,

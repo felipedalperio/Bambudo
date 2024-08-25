@@ -19,38 +19,41 @@ export default function Profile() {
   const { theme } = useContext(ThemeContext);
   const setUser = setUserCurrent();
 
-  useEffect(() => {
+useEffect(() => {
+  const fetchPosts = async () => {
     try {
-      database.collection("users").doc(userRedux.id).onSnapshot((docRef) => {
+      setLoading(true);
+      const userDoc = await database.collection("users").doc(userRedux.id).get();
+      
+      if (userDoc.exists) {
+        const myPosts = userDoc.data().myPosts || [];
         const list = [];
-        setLoading(false);
   
-        const reversedMyPosts = [...docRef.data().myPosts];
-  
-        reversedMyPosts.forEach((index, key) => {
-          if (key === 0) {
-            setLoading(true);
+        // Alterado para buscar documentos com ordenação
+        const postsQuery = database.collection("posts")
+          .where(firebase.firestore.FieldPath.documentId(), 'in', myPosts)
+          .orderBy('dataFilter', 'desc');
+        
+        const querySnapshot = await postsQuery.get();
+        querySnapshot.forEach(doc => {
+          if (doc.exists) {
+            list.push({ ...doc.data(), id: doc.id });
           }
-  
-          database.collection("posts").doc(index).get().then((doc) => {
-            if (doc.data()) {
-              list.push({ ...doc.data(), id: doc.id });
-              setPost(list);
-              setLoading(false);
-            }
-          }).catch((error) => {
-            setLoading(false);
-            Alert.alert('Oops, algo deu errado.');
-          });
         });
-      }).catch((error) => {
-        setLoading(false);
-        Alert.alert('Oops, algo deu errado.');
-      });
+  
+        setPost(list);
+      }
     } catch (error) {
+      Alert.alert('Oops, algo deu errado.');
+    } finally {
       setLoading(false);
     }
-  }, [userRedux]);
+  };
+
+  fetchPosts();
+}, [userRedux]);
+
+  
   
 
 

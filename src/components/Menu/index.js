@@ -8,14 +8,6 @@ import Icon5 from 'react-native-vector-icons/FontAwesome5'
 import { useContext, useEffect, useState } from 'react';
 import { ThemeContext } from '../../store/ThemeContext';
 import { removeDuplicateSpaces, removeFourSpaces } from '../../config/removeSpaces';
-import { InterstitialAd, AdEventType, TestIds } from 'react-native-google-mobile-ads';
-
-const adUnitId =  TestIds.INTERSTITIAL;
-
-const interstitial = InterstitialAd.createForAdRequest(adUnitId, {
-  requestNonPersonalizedAdsOnly: true,
-  keywords: ['fashion', 'clothing'],
-});
 
 export default function Menu({ title, desc, emoji, cat, setDesc, setTitle, update, lock }) {
   const userRedux = useSelector(selectUser);
@@ -26,18 +18,6 @@ export default function Menu({ title, desc, emoji, cat, setDesc, setTitle, updat
   const { theme } = useContext(ThemeContext);
   const isFocused = useIsFocused();
   
-
-  useEffect(() => {
-      const unsubscribe = interstitial.addAdEventListener(AdEventType.LOADED, () => {
-          setAds(true)
-          //Alert.alert('Entreei.')
-      });
-      // Start loading the interstitial straight away
-      interstitial.load();
-      // Unsubscribe from events on unmount
-      return unsubscribe;
-  }, [isFocused]);
-
   
 
   function dataAtualFormatada() {

@@ -85,8 +85,8 @@ export default function Login({ props, setIndex }) {
                     <Text style={{ ...styles.titleLogin, color: 'black' }}>Bam</Text>
                     <Text style={styles.titleLogin}>Budo</Text>
                 </View>
-                <TextInput onChangeText={(text) => setEmail(text)} value={email} style={styles.input} placeholder='Email' placeholderTextColor={theme.primaryColorDark} type="text" />
-                <TextInput onChangeText={(text) => setPassword(text)} value={password} style={styles.input} placeholder='Senha' placeholderTextColor={theme.primaryColorDark} secureTextEntry={true} type="text" />
+                <TextInput onChangeText={(text) => setEmail(text)} value={email} style={styles.input} placeholder='Email' placeholderTextColor={theme.primaryColorDark} type="text"  autoCapitalize="none"/>
+                <TextInput onChangeText={(text) => setPassword(text)} value={password} style={styles.input} placeholder='Senha' placeholderTextColor={theme.primaryColorDark} secureTextEntry={true} type="text"  autoCapitalize="none" />
 
                 {errorLogin === true
                     ? (

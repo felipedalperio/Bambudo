@@ -86,8 +86,11 @@ const styles = StyleSheet.create({
     },
     inputText:{
         outlineStyle:'none',
-        borderColor:'transparent',
+       
         borderBottomColor:'#418F87',
+        borderLeftColor:'transparent',
+        borderRightColor:'transparent',
+        borderTopColor:'transparent',
         borderStyle:'solid',
         borderWidth:2,
         marginTop:5,

@@ -8,8 +8,9 @@ import { useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import firebase from '../../config/firebaseconfig'
 import { color } from '../../config/color';
-import likePost from '../../components/likePost/likePost';
+import likePost from '../../controller/likePost/likePost';
 import { ThemeContext } from '../../store/ThemeContext'
+import notification from '../../controller/notificationPost/notificationPost'
 
 export default function Post({ item, database, post, setPost }) {
   const userRedux = useSelector(selectUser);
@@ -32,6 +33,7 @@ export default function Post({ item, database, post, setPost }) {
   const likePostMethod = async (value) => {
     setLike(value)
     await likePost(item, userRedux.id, value) //salvando no banco
+    await notification(0, userRedux, item);
     if (value == false) {
       setNum(num == 0 ? 0 : num - 1)
     } else {

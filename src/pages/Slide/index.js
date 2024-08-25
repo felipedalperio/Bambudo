@@ -28,7 +28,7 @@ export default function Slide({navigation}) {
           index={index}
           renderItem={({item}) => {
             return (
-              <SlideItem props={item} index={index} setIndex={setIndex} navigation={navigation} theme={theme} />
+              <SlideItem props={item} index={index} setIndex={setIndex} navigation={navigation} theme={theme} scrollRef={scrollRef} />
             )
           }}
         />

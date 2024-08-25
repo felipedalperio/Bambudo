@@ -1,22 +1,37 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { selectUser } from '../../store/userSlice';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { getFocusedRouteNameFromRoute, useNavigation, useRoute } from '@react-navigation/native';
-import IconAwesome from 'react-native-vector-icons/FontAwesome'
-import { useContext } from 'react';
-import { ThemeContext } from '../../store/ThemeContext';
+import {  useNavigation, useRoute } from '@react-navigation/native';
 import IconFeather from 'react-native-vector-icons/Feather'
+import firebase from '../../config/firebaseconfig';
 
 export default function Header() {
     const [image, setImage] = useState('');
-    const { theme } = useContext(ThemeContext);
-
     const userRedux = useSelector(selectUser);
-    let dispatch = useDispatch()
     let navigation = useNavigation();
     let route = useRoute()
     //const routeName = getFocusedRouteNameFromRoute(route) 
+    const [newNotification, setNewNotification] = useState(false);
+
+    useEffect(() => {
+        const userId = userRedux.id;
+        if(userId){
+            const database = firebase.firestore();
+            if(database){
+                const userDocRef = database.collection("notification").doc(userId);
+                // Listener para o campo newNotification em tempo real
+                const unsubscribe = userDocRef.onSnapshot((doc) => {
+                if (doc.exists) {
+                    setNewNotification(doc.data().newNotification);
+                }
+                });
+                // Limpeza do listener quando o componente for desmontado
+                return () => unsubscribe();
+            }
+        }
+    }, [userRedux]);
+
     useEffect(() => {
         imagePicture()
     }, [userRedux])
@@ -49,8 +64,8 @@ export default function Header() {
 
             <View style={styles.right}>
                 <TouchableOpacity onPress={() => goNotification()} style={{marginRight:20}}>
-                    <IconFeather name="bell" size={25} style={{ marginRight: 10 }} />
-                    <View style={{...styles.conter, opacity:0}}/>
+                    <IconFeather name="bell" size={25}  />
+                    <View style={{...styles.conter, opacity: newNotification ? 1 : 0}}/>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => goSettings()}>
                     <Image style={styles.image} source={image} />
@@ -106,7 +121,7 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         backgroundColor:'#ff5c33',
         bottom:2,
-        right:8
+        left:16
     },
     textConter:{
         color:'white',

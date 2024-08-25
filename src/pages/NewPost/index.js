@@ -67,7 +67,7 @@ export default function NewPost({ route }) {
 
   useEffect(() => {
     paramsVerify()
-  }, [route.params])
+  }, [route && route.params])
 
   const paramsVerify = () => {
     try{

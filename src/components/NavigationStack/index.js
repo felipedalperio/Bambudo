@@ -4,14 +4,15 @@ import SinglePost from "../../pages/SinglePost";
 import Tabs from "../Navigation";
 import NewPost from "../../pages/NewPost";
 import Notification from "../../pages/Notification";
-
+import { useContext } from 'react';
+import { ThemeContext } from '../../store/ThemeContext';
 
 const Stack = createStackNavigator(); 
 
 
 const NavigationStack = ({changeUserAuth}) => {
   const TabsScreen = (props) => <Tabs {...props} changeUserAuth={changeUserAuth} />;
-
+  const { theme } = useContext(ThemeContext);
   return (
     <Stack.Navigator >  
        <Stack.Screen
@@ -23,7 +24,13 @@ const NavigationStack = ({changeUserAuth}) => {
        <Stack.Screen
         name="SinglePost"
         lazy={true}
-        
+        options={{ title: 'Publicação', headerTitleAlign: 'center', headerStyle: {
+          backgroundColor: theme.primaryColor
+          },headerTitleStyle: {
+            color: '#FFFFFF', // Cor do texto do título
+          }, 
+          headerTintColor: '#FFFFFF'
+        }}
         component={SinglePost}
       />
        <Stack.Screen
@@ -35,6 +42,7 @@ const NavigationStack = ({changeUserAuth}) => {
        <Stack.Screen
         name="Notification"
         lazy={true}
+        options={{ title: 'Notificações', headerTitleAlign: 'center' }}
         component={Notification}
       />
     </Stack.Navigator>

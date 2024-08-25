@@ -7,7 +7,7 @@ import { selectUser } from '../../store/userSlice';
 import { useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import firebase from '../../config/firebaseconfig'
-import likePost from '../../components/likePost/likePost';
+import likePost from '../../controller/likePost/likePost';
 import { ThemeContext } from '../../store/ThemeContext';
 
 export default function PostLiked({ item, database, post }) {
