@@ -35,14 +35,14 @@ const Tabs = ({changeUserAuth}) => {
     >
       <Tab.Screen name="Profile" component={Profile} lazy={true} options={
         {
-          unmountOnBlur: true,
+          unmountOnBlur: false,
           tabBarIcon: ({ focused }) => (
             <IconAwesome name="pencil" size={30} color={focused ? 'white' : '#7A7A7A'} style={focused && { backgroundColor: theme.primaryColor, padding: 10, borderRadius: 30 }} />
           )
         }} />
       <Tab.Screen name="Liked" component={Liked} lazy={true}  options={
         {
-          unmountOnBlur: true,
+          unmountOnBlur: false,
           tabBarIcon: ({ focused }) => (
             <IconAwesome name="heart" size={30} color={focused ? 'white' : '#7A7A7A'} style={focused && { backgroundColor: theme.primaryColor, padding: 10, borderRadius: 30 }} />
           )

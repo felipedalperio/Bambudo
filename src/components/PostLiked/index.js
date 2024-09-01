@@ -2,13 +2,12 @@ import { View, Text, Image, TouchableOpacity, FlatList, StatusBar, SafeAreaView,
 import styles from './style'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
-import { useState, useEffect, useLayoutEffect, useContext } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { selectUser } from '../../store/userSlice';
 import { useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import firebase from '../../config/firebaseconfig'
 import likePost from '../../controller/likePost/likePost';
-import { ThemeContext } from '../../store/ThemeContext';
 
 export default function PostLiked({ item, database, post }) {
   const userRedux = useSelector(selectUser);
@@ -41,6 +40,7 @@ export default function PostLiked({ item, database, post }) {
         myPosts: firebase.firestore.FieldValue.arrayRemove(id)
       });
     }).catch((err) => {
+      console.log("PostLiked: "+ err);
       Alert.alert('Oops, algo deu errado.')
     });
   }

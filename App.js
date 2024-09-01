@@ -16,6 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { color } from './src/config/color';
 import { ThemeContext, ThemeProvider } from './src/store/ThemeContext';
 import { NavigationStack } from './src/components/NavigationStack';
+import { LikedProvider } from './src/store/LikedContext';
 
 
 const Stack = createStackNavigator();
@@ -56,47 +57,49 @@ export default function App() {
   return (
     <Provider store={store}>
       <ThemeProvider>
-        <StatusBar backgroundColor='black' />
-        <NavigationContainer>
-          {userAuth == null && (
-            <Loading />
-          )}
-          {userAuth == true && (
-            <NavigationStack changeUserAuth={changeUserAuth} />
-          )}
+        <LikedProvider>
+          <StatusBar backgroundColor='black' />
+          <NavigationContainer>
+            {userAuth == null && (
+              <Loading />
+            )}
+            {userAuth == true && (
+              <NavigationStack changeUserAuth={changeUserAuth} />
+            )}
 
-          {userAuth == false &&
-            (
-              <Stack.Navigator initialRouteName="Slide">
-                <Stack.Screen
-                  name="Slide"
-                  component={Slide}
-                  initialParams={{ changeUserAuth: changeUserAuth }}
-                  options={{
-                    headerShown: false
-                  }}
-                />
-                <Stack.Screen
-                  name="Login"
-                  component={Login}
-                  options={{
-                    headerShown: false
-                  }}
-                />
-                <Stack.Screen
-                  name="Create"
-                  component={Create}
-                  initialParams={{ changeUserAuth: changeUserAuth }}
-                  options={{
-                    headerShown: false
-                  }}
-                />
-              
-              </Stack.Navigator>
-            )
-          }
+            {userAuth == false &&
+              (
+                <Stack.Navigator initialRouteName="Slide">
+                  <Stack.Screen
+                    name="Slide"
+                    component={Slide}
+                    initialParams={{ changeUserAuth: changeUserAuth }}
+                    options={{
+                      headerShown: false
+                    }}
+                  />
+                  <Stack.Screen
+                    name="Login"
+                    component={Login}
+                    options={{
+                      headerShown: false
+                    }}
+                  />
+                  <Stack.Screen
+                    name="Create"
+                    component={Create}
+                    initialParams={{ changeUserAuth: changeUserAuth }}
+                    options={{
+                      headerShown: false
+                    }}
+                  />
+                
+                </Stack.Navigator>
+              )
+            }
 
-        </NavigationContainer>
+          </NavigationContainer>
+        </LikedProvider>
       </ThemeProvider>
     </Provider>
   );

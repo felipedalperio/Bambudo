@@ -56,8 +56,8 @@ export default function Comment({ item, index, allComents, setListComments, idPo
       setListComments(CommentUpdate)
       updateNumComment(false);
     }).catch((err) => {
+      console.log("Comment: "+ err);
       Alert.alert('Oops, algo deu errado.')
-      console.log(err)
     });
   }
   const deleteCommentComment = async (indexCom) => {
@@ -108,14 +108,14 @@ export default function Comment({ item, index, allComents, setListComments, idPo
           <Text style={{...styles.desc, color:theme.textColor}}>{item.comment}</Text>
           <View style={styles.likeOrComment}>
             <TouchableOpacity onPress={() => setComentar(!comentar)}>
-              <Text style={styles.textCommentOrLike}>Responder</Text>
+              <Text style={{...styles.textCommentOrLike, color:theme.primaryColor }}>Responder</Text>
             </TouchableOpacity>
           </View>
           {comentar && (
             <KeyboardAvoidingView style={styles.form}
               behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-              <TextInput style={{...styles.inputText,  color:theme.textColor}} placeholder="Digite aqui." onChangeText={(text) => setText(text)} value={text} />
-              <TouchableOpacity style={{...styles.send}} onPress={() => sendComment()}>
+              <TextInput style={{...styles.inputText,  color:theme.textColor, borderBottomColor: theme.primaryColor }} placeholder="Digite aqui." onChangeText={(text) => setText(text)} value={text} />
+              <TouchableOpacity style={{...styles.send, backgroundColor:theme.primaryColor }} onPress={() => sendComment()}>
                 <Text style={styles.sendText}>Enviar</Text>
               </TouchableOpacity>
             </KeyboardAvoidingView>

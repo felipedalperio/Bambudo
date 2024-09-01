@@ -11,8 +11,10 @@ import { color } from '../../config/color';
 import likePost from '../../controller/likePost/likePost';
 import { ThemeContext } from '../../store/ThemeContext'
 import notification from '../../controller/notificationPost/notificationPost'
+import { LikedContext } from '../../store/LikedContext';
 
-export default function Post({ item, database, post, setPost }) {
+
+export default function Post({ item, database, post, setPost}) {
   const userRedux = useSelector(selectUser);
   const navigation = useNavigation();
   const [like, setLike] = useState(false);
@@ -22,7 +24,7 @@ export default function Post({ item, database, post, setPost }) {
   const [lock, setLock] = useState(item.lock)
   const [commentsCount, setCommentsCount] = useState(item.comments)
   const { theme } = useContext(ThemeContext);
-
+  const { setReload } = useContext(LikedContext);
 
   useEffect(() => {
     setLike(item.whoLiked.includes(userRedux.id))
@@ -32,6 +34,7 @@ export default function Post({ item, database, post, setPost }) {
 
   const likePostMethod = async (value) => {
     setLike(value)
+    setReload(true)
     await likePost(item, userRedux.id, value) //salvando no banco
     await notification(0, userRedux, item);
     if (value == false) {
@@ -60,6 +63,7 @@ export default function Post({ item, database, post, setPost }) {
         myPosts: firebase.firestore.FieldValue.arrayRemove(id)
       });
     }).catch((err) => {
+      console.log("Post: "+ err);
       Alert.alert('Oops, algo deu errado.')
     });
     const updatedList = post.filter((item) => item.id !== id);
@@ -120,15 +124,13 @@ export default function Post({ item, database, post, setPost }) {
           <Text>{item.data}</Text>
         </View>
         <View style={styles.right}>
-          <TouchableOpacity style={styles.iconButton}>
+          <TouchableOpacity style={styles.iconButton} onPress={() => likePostMethod(!like)}>
             {like ? (
-              <Icon name='heart' size={20} color={theme.primaryColor} style={{ marginRight: 5 }} onPress={() => likePostMethod(false)} />
+              <Icon name='heart' size={20} color={theme.primaryColor} style={{ marginRight: 5 }} />
             ) : (
-              <Icon name='heart-o' size={20} color={theme.primaryColor} style={{ marginRight: 5 }} onPress={() => likePostMethod(true)} />
+              <Icon name='heart-o' size={20} color={theme.primaryColor} style={{ marginRight: 5 }} />
             )}
             <Text>{num}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton} onPress={() => goSinglePost()}>
             <Icon5 name='comment-alt' size={20} color={theme.primaryColor} style={{ marginLeft: 10, marginRight: 5 }} />
             <Text>{commentsCount}</Text>
           </TouchableOpacity>

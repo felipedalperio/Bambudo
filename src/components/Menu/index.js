@@ -79,7 +79,10 @@ export default function Menu({ title, desc, emoji, cat, setDesc, setTitle, updat
         setTitle("");
         setLoading(false)
         setAds(false)
-        navigation.navigate("Profile", { refresh: true });
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Profile' }],
+        });
       }).catch((error) => {
         setLoading(false)
         setAds(false)
@@ -88,6 +91,7 @@ export default function Menu({ title, desc, emoji, cat, setDesc, setTitle, updat
     }).catch((error) => {
       setLoading(false)
       setAds(false)
+      console.log("Menu: "+ err);
       Alert.alert('Oops, algo deu errado.')
     });
   }
@@ -112,10 +116,15 @@ export default function Menu({ title, desc, emoji, cat, setDesc, setTitle, updat
       setTitle("");
       setLoading(false)
       setAds(false)
-      navigation.navigate("Profile", { refresh: true });
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Profile' }],
+      });
+      navigation.goBack();
     }).catch((error) => {
       setLoading(false)
       setAds(false)
+      console.log("Menu: "+ err);
       Alert.alert('Oops, algo deu errado.')
     });
     

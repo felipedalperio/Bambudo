@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     },
     iconButton:{
         flexDirection:'row',
-        alignItems:'center'
+        alignItems:'center',
     },  
     more:{
         marginTop:10,

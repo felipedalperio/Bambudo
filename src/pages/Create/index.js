@@ -104,9 +104,9 @@ export default function Create() {
                     <Text style={{ ...styles.titleCreate, color: 'black' }}>Bam</Text>
                     <Text style={styles.titleCreate}>Budo</Text>
                 </View>
-                <TextInput onChangeText={(text) => setUsername(text)} value={username} style={styles.input} placeholder='Username' placeholderTextColor={theme.primaryColorDark} type="text" maxLength={20} />
-                <TextInput onChangeText={(text) => setEmail(text)} value={email} style={styles.input} placeholder='Email' placeholderTextColor={theme.primaryColorDark} type="text"  maxLength={40}/>
-                <TextInput onChangeText={(text) => setPassword(text)} value={password} style={styles.input} placeholder='Senha' placeholderTextColor={theme.primaryColorDark} secureTextEntry={true} type="text" maxLength={40} />
+                <TextInput onChangeText={(text) => setUsername(text)} value={username} style={styles.input} placeholder='Username' placeholderTextColor={theme.primaryColorDark} type="text" maxLength={20} autoCapitalize="none" />
+                <TextInput onChangeText={(text) => setEmail(text)} value={email} style={styles.input} placeholder='Email' placeholderTextColor={theme.primaryColorDark} type="text"  maxLength={40} autoCapitalize="none"/>
+                <TextInput onChangeText={(text) => setPassword(text)} value={password} style={styles.input} placeholder='Senha' placeholderTextColor={theme.primaryColorDark} secureTextEntry={true} type="text" maxLength={40} autoCapitalize="none" />
 
                 {errorRegister === true
                     ? (

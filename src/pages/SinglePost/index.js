@@ -16,8 +16,7 @@ import { color } from '../../config/color';
 import { ThemeContext } from '../../store/ThemeContext';
 import { removeDuplicateSpaces } from '../../config/removeSpaces';
 import notification from '../../controller/notificationPost/notificationPost';
-
-
+import { LikedContext } from '../../store/LikedContext';
 
 
 export default function SinglePost({ route }) {
@@ -33,9 +32,11 @@ export default function SinglePost({ route }) {
   const [num, setNum] = useState(route.params.numberLikes);
   const [showPhoto, setShowPhoto] = useState(false);
   const { theme } = useContext(ThemeContext);
-
+  const { setReload} = useContext(LikedContext);
+  
   const likeMethod = (value) => {
     setLike(value)
+    setReload(true)
     if(route.params.setLikeHome){
       route.params.setLikeHome(value)
       likePost(post, userRedux.id, value)
@@ -106,6 +107,7 @@ export default function SinglePost({ route }) {
         updateNumComment(true)
         notification(1, userRedux, post);
       }).catch((error) => {
+        console.log("SinglePost: " + error)
         Alert.alert('Oops, algo deu errado.')
         setSendLoading(false)
       });
@@ -135,7 +137,12 @@ export default function SinglePost({ route }) {
         myPosts: firebase.firestore.FieldValue.arrayRemove(post.id)
       });
       navigation.goBack();
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Profile' }],
+      });
     }).catch((err) => {
+      console.log("SinglePost: " + err)
       Alert.alert('Oops, algo deu errado.')
     });
   }
@@ -163,6 +170,7 @@ export default function SinglePost({ route }) {
       }).then(() => {
 
       }).catch((err) => {
+        console.log("SinglePost: " + err)
         Alert.alert('Oops, algo deu errado.')
       });
     }
