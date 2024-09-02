@@ -157,6 +157,18 @@ export const categories = [
   }
 ]
 
+export const categoriesProfile = [
+  {
+    name: 'Todos'
+  },
+  {
+    name: 'Privado'
+  },
+  {
+    name: 'Público'
+  }
+]
+
 export const emojis = [
 
   {

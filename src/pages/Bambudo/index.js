@@ -163,15 +163,20 @@ import PostLoader from '../../components/PostLoader'
     };
   
     const chooseCat = (name) => {
-      setPost([]); //limpanmdo lista
-      setNameCat(name);
       setShowCat(false);
-      setScrollPosition(0);
+      if(name !== nameCat){
+        setPost([]); //limpanmdo lista
+        setNameCat(name);
+        setLastVisible(null);
+        setScrollPosition(0);
+        setHasMoreData(true);
+      }
     };
   
     const chooseData = (name) => {
       setNameData(name);
       setShowData(false);
+      setLastVisible(null);
       setScrollPosition(0);
     };
   

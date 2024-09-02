@@ -17,11 +17,14 @@ export default function Liked() {
   const [loading, setLoading] = useState(false);
   const [post, setPost] = useState([]);
   const [lastVisible, setLastVisible] = useState(null); // Último documento visível
-  const [hasMoreData, setHasMoreData] = useState(true); 
+  const [hasMoreData, setHasMoreData] = useState(true);
+  const [postsLiked, setPostsLiked] = useState([]);
   const [limit, setLimit] = useState(10); // Limite de posts por vez
+  const [limitPost, setLimitPost] = useState(0); // Limite de posts por vez
   const { theme } = useContext(ThemeContext);
   const navigation = useNavigation();
   const { reload, setReload } = useContext(LikedContext);
+  const limitPorPost = 29
 
   // Fetch data and reset list when `reload` changes or component mounts
   useFocusEffect(
@@ -36,31 +39,53 @@ export default function Liked() {
     }, [reload])
   );
 
+  const getPostsLiked = async () => {
+    try {
+      let myPosts = postsLiked;
+      if (postsLiked.length > 0) {
+        return postsLiked;
+      } else {
+        const userDoc = await database.collection('users').doc(userRedux.id).get();
+        if (userDoc.exists) {
+          myPosts = userDoc.data().postsLiked || [];
+          setPostsLiked(myPosts)
+        }
+        return myPosts
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   const fetchData = async () => {
     try {
       setLoading(true); // Definir loading para true ao iniciar a operação
-      if(!userRedux?.id ){
-         setHasMoreData(false);
-         setPost([]);
-         return;
+      if (!userRedux?.id) {
+        setHasMoreData(false);
+        setPost([]);
+        return;
       }
-      const userDoc = await database.collection('users').doc(userRedux.id).get();
-      if (userDoc.exists) {
-        const myPosts = userDoc.data().postsLiked || [];
-        const list = [];
+      const myPosts = await getPostsLiked();
+      const list = [];
 
-        if (myPosts.length === 0) {
-          // Usuário não tem postagens
-          setHasMoreData(false);
-          setPost([]);
-          return;
-        }
+      if (myPosts.length === 0) {
+        // Usuário não tem postagens
+        setHasMoreData(false);
+        setPost([]);
+        return;
+      }
+
+      // Pega os próximos 29 IDs restantes
+      const nextPosts = myPosts.slice(limitPost, limitPost + limitPorPost);
+      console.log(limitPost)
+      console.log(nextPosts.length)
+
+
+      if (nextPosts.length > 0) {
 
         let postsQuery = database.collection("posts")
-          .where(firebase.firestore.FieldPath.documentId(), 'in', myPosts)
-          .orderBy('dataFilter', 'desc')
+          .where(firebase.firestore.FieldPath.documentId(), 'in', nextPosts)
           .limit(limit);
-
 
         if (lastVisible && !reload) {
           postsQuery = postsQuery.startAfter(lastVisible);
@@ -83,8 +108,25 @@ export default function Liked() {
 
           // Atualiza o último documento visível
           setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1]);
-        }else {
-          setHasMoreData(false); // Marca que não há mais dados
+
+        } else {
+
+          // Avança para a próxima página
+          setLimitPost(prevLimitPost => {
+            const limitNextPage = prevLimitPost + limitPorPost;
+            // Atualize o estado
+            return limitNextPage;
+          });
+
+          // Verifica se há mais dados
+          const newLimitPost = limitPost + limitPorPost;
+          if (myPosts.slice(newLimitPost, newLimitPost + limitPorPost).length > 0) {
+            setLastVisible(null)
+            setHasMoreData(true);
+          } else {
+            setHasMoreData(false);
+            console.log("acabou");
+          }
         }
       }
     } catch (err) {
@@ -96,7 +138,8 @@ export default function Liked() {
   };
 
   const handleLoadMore = () => {
-    if (!loading && lastVisible && hasMoreData) {
+    //&& setLastVisible(null) - foi tirado
+    if (!loading && hasMoreData) {
       console.log("handleLoadMore")
       fetchData();
     }
