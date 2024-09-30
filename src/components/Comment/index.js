@@ -114,7 +114,7 @@ export default function Comment({ item, index, allComents, setListComments, idPo
           {comentar && (
             <KeyboardAvoidingView style={styles.form}
               behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-              <TextInput style={{...styles.inputText,  color:theme.textColor, borderBottomColor: theme.primaryColor }} placeholder="Digite aqui." onChangeText={(text) => setText(text)} value={text} />
+              <TextInput placeholderTextColor={theme.textColor} style={{...styles.inputText,  color:theme.textColor, borderBottomColor: theme.primaryColor }} placeholder="Digite aqui." onChangeText={(text) => setText(text)} value={text} />
               <TouchableOpacity style={{...styles.send, backgroundColor:theme.primaryColor }} onPress={() => sendComment()}>
                 <Text style={styles.sendText}>Enviar</Text>
               </TouchableOpacity>

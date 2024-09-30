@@ -49,7 +49,7 @@ export default function PalletaCores({ show, setShow, setColor }) {
   }, [isFocused]);
 
   return (
-    <Animatable.View animation="slideInUp" duration={1000} style={styles.container}>
+    <Animatable.View animation="slideInUp" duration={1000} style={{...styles.container, backgroundColor:theme.bgColor}}>
       <View style={{ ...styles.titleView, backgroundColor: theme.primaryColor }}>
         <Text style={styles.title}> Escolha uma cor! </Text>
         <TouchableOpacity onPress={() => setShow(false)}>
@@ -62,8 +62,8 @@ export default function PalletaCores({ show, setShow, setColor }) {
         style={{ width: '95%' }}
         renderItem={({ item, index }) => {
           return (
-            <TouchableOpacity style={styles.wrapper} key={index} onPress={() => chooseColor(index)}>
-              <Text style={{ ...styles.textColor, color: item.primaryColorDark }}>{item.text}</Text>
+            <TouchableOpacity style={{...styles.wrapper, backgroundColor:theme.cardColor}} key={index} onPress={() => chooseColor(index)}>
+              <Text style={{ ...styles.textColor, color: item.primaryColor }}>{item.text}</Text>
               <View style={styles.paleta}>
                 <View style={{ ...styles.box, backgroundColor: item.primaryColorLight }}></View>
                 <View style={{ ...styles.box, backgroundColor: item.primaryColor, marginHorizontal: 5 }}></View>

@@ -118,7 +118,7 @@ export default function Notification() {
   };
   
   return (
-    <View style={styles.container}>
+    <View style={{...styles.container, backgroundColor: theme.bgColor}}>
       <View style={{...styles.titleGroup, backgroundColor:theme.primaryColor}}>
         <Text style={styles.textProfile}>Suas Notificações</Text>
         <IconFeather name='bell' size={20} color="white" style={{ marginLeft: 10 }} />
@@ -131,7 +131,7 @@ export default function Notification() {
             data={list}
             renderItem={({ item }) => {
               return (
-                <TouchableOpacity  style={{...styles.notificationItem, opacity: item.fSeen ? 0.7 : 1}} onPress={() => goSinglePost(item.idPost)}>
+                <TouchableOpacity  style={{...styles.notificationItem, opacity: item.fSeen ? 0.7 : 1, backgroundColor: theme.cardColor}} onPress={() => goSinglePost(item.idPost)}>
                   {
                     item.picture != "" ? (
                       <Image source={{ uri: item.picture }} style={styles.picture} />
@@ -141,10 +141,10 @@ export default function Notification() {
                   }
                   <View style={{flexDirection:'row', flex:1}}>
                     <View style={{flexDirection:'column', flex:1}}>
-                      <Text style={styles.message}>{item.message}</Text>
+                      <Text style={{...styles.message, color:theme.textColor}}>{item.message}</Text>
                       <View style={styles.dateWrapper}>
                       <View style={{ ...styles.circle, display: item.fSeen ? 'none' : 'flex' }}></View>
-                        <Text style={{ ...styles.date, color: item.fSeen ? '#333' : '#ff5c33', fontWeight: item.fSeen ? '300' : '400' }}>
+                        <Text style={{ ...styles.date, color: theme.textColor2, fontWeight: item.fSeen ? '300' : '400' }}>
                           {formatDateToBR(item.date)}
                         </Text>
                       </View>
@@ -167,7 +167,7 @@ export default function Notification() {
           />
         </View>
       ) : (
-        <Text style={styles.empty}>Você não possui nenhuma Notificação</Text>
+        <Text style={{...styles.empty, color: theme.textColor}}>Você não possui nenhuma Notificação</Text>
       )}
     </View>
   )

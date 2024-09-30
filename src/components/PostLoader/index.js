@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useContext} from 'react';
 import { Animated, Easing, TouchableOpacity, View } from 'react-native';
 import styles from './style';
+import { ThemeContext } from '../../store/ThemeContext'
+import { color } from '../../config/color';
 
 export default function PostLoader({limit}) {
   const [animation] = useState(new Animated.Value(0));
+  const { theme } = useContext(ThemeContext);
 
   useEffect(() => {
     Animated.loop(
@@ -28,22 +31,22 @@ export default function PostLoader({limit}) {
   return (
     <View>
       {limit ? (
-        <View style={styles.post}>
-          <Animated.View style={{ ...styles.light, ...animatedStyle }} />
+        <View style={{...styles.post, backgroundColor:theme.cardColor}}>
+          <Animated.View style={{ ...styles.light, ...animatedStyle, backgroundColor: theme.cardColorReload }} />
         </View>
       ) : (
         <>
-        <View style={styles.post}>
-          <Animated.View style={{ ...styles.light, ...animatedStyle }} />
+        <View style={{...styles.post, backgroundColor:theme.cardColor}}>
+          <Animated.View style={{ ...styles.light, ...animatedStyle, backgroundColor: theme.cardColorReload }} />
         </View>
-        <View style={styles.post}>
-          <Animated.View style={{ ...styles.light, ...animatedStyle }} />
+        <View style={{...styles.post, backgroundColor:theme.cardColor}}>
+          <Animated.View style={{ ...styles.light, ...animatedStyle, backgroundColor: theme.cardColorReload }} />
         </View>
-        <View style={styles.post}>
-          <Animated.View style={{ ...styles.light, ...animatedStyle }} />
+        <View style={{...styles.post, backgroundColor:theme.cardColor}}>
+          <Animated.View style={{ ...styles.light, ...animatedStyle, backgroundColor: theme.cardColorReload }} />
         </View>
-        <View style={styles.post}>
-          <Animated.View style={{ ...styles.light, ...animatedStyle }} />
+        <View style={{...styles.post, backgroundColor:theme.cardColor}}>
+          <Animated.View style={{ ...styles.light, ...animatedStyle, backgroundColor: theme.cardColorReload }} />
         </View>
         </>
       )}

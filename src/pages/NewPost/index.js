@@ -113,22 +113,22 @@ export default function NewPost({ route }) {
           <Icon name='edit' size={20} color="white" style={{ marginLeft: 10 }} />
         </View>
       )}
-      <View style={styles.container}>
+      <View style={{...styles.container, backgroundColor: theme.bgColor}}>
         <TouchableOpacity style={styles.lockOrUnlockButton} onPress={() => setLock(!lock)}>
           {lock ? (
-            <IconFeather name="lock" size={20} style={{ marginRight: 10 }} />
+            <IconFeather name="lock" size={20} style={{ marginRight: 10 }} color={theme.textColor}/>
           ) : (
-            <IconFeather name="unlock" size={20} style={{ marginRight: 10 }} />
+            <IconFeather name="unlock" size={20} style={{ marginRight: 10 }} color={theme.textColor}/>
           )}
-          <Text>{lock ? 'Privado' : 'Público'}</Text>
+          <Text style={{color: theme.textColor}}>{lock ? 'Privado' : 'Público'}</Text>
         </TouchableOpacity>
         <View style={styles.options}>
           <TouchableOpacity style={styles.optionText} onPress={changeShowCat}>
-            <Text>Catêgoria: </Text>
-            <Text style={styles.catText}>{cat}</Text>
+            <Text style={{color:theme.textColor}}>Catêgoria: </Text>
+            <Text style={{...styles.catText, color:theme.textColor }}>{cat}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.optionText} onPress={changeShow}>
-            <Text>Humor</Text>
+            <Text style={{color:theme.textColor}}>Humor</Text>
             <Image style={styles.emoji} source={{ uri: emoji }} />
           </TouchableOpacity>
         </View>
@@ -138,8 +138,8 @@ export default function NewPost({ route }) {
         </View>
         <View style={styles.wrapperInfo}>
 
-          <TextInput placeholder='Título' style={{ ...styles.title, color: theme.primaryColorDark }} onChangeText={(text) => setTitle(text)} value={title} />
-          <TextInput multiline={true} placeholder='Escreva algo legal :D' style={{ ...styles.desc }} onChangeText={(text) => setDesc(text)} value={desc} />
+          <TextInput placeholderTextColor={theme.textColor} placeholder='Título' style={{ ...styles.title, color: theme.primaryColorDark }} onChangeText={(text) => setTitle(text)} value={title} />
+          <TextInput placeholderTextColor={theme.textColor} multiline={true} placeholder='Escreva algo legal :D' style={{ ...styles.desc, color:theme.icon }} onChangeText={(text) => setDesc(text)} value={desc} />
 
         </View>
       </View>

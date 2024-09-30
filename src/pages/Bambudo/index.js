@@ -181,7 +181,7 @@ import PostLoader from '../../components/PostLoader'
     };
   
     return (
-      <View style={styles.container}>
+      <View style={{...styles.container, backgroundColor:theme.bgColor}}>
         {/* BannerAd code if not on web */}
         {Platform.OS !== 'web' && BannerAd != null && (
           <BannerAd

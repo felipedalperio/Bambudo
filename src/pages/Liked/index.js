@@ -151,7 +151,7 @@ export default function Liked() {
   }, [userRedux]);
 
   return (
-    <View style={styles.container}>
+    <View style={{...styles.container, backgroundColor: theme.bgColor }}>
       <View style={{ ...styles.titleGroup, backgroundColor: theme.primaryColor }}>
         <Text style={styles.textLiked}>Posts que você curtiu</Text>
         <Icon name='heart-o' size={20} color="white" style={{ marginLeft: 10 }} />

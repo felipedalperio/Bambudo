@@ -203,13 +203,13 @@ export default function SinglePost({ route }) {
           </TouchableOpacity>
         )
       }
-      <ScrollView style={{ ...styles.container }} keyboardShouldPersistTaps="always">
+      <ScrollView style={{ ...styles.container, backgroundColor:theme.bgColor }} keyboardShouldPersistTaps="always">
         {
           userRedux.id === post.idUser && (
             <View style={styles.updateOrDelete}>
               <TouchableOpacity style={styles.viewUD} onPress={() => updateLock()}>
-                <IconFeather name={lock ? 'lock' : 'unlock'} size={30} style={{ marginRight: 10 }} />
-                <Text>{lock ? 'Privado' : 'Público'}</Text>
+                <IconFeather name={lock ? 'lock' : 'unlock'} size={30} style={{ marginRight: 10, color: theme.textColor }} />
+                <Text style={{color: theme.textColor}}>{lock ? 'Privado' : 'Público'}</Text>
               </TouchableOpacity>
               <View style={styles.viewUD}>
                 <TouchableOpacity style={styles.buttonUpdate} onPress={() => goUpdate()}>
@@ -234,7 +234,7 @@ export default function SinglePost({ route }) {
           </TouchableOpacity>
 
           <View style={styles.infoUser}>
-            <Text style={{ ...styles.name, borderColor: theme.primaryColor }}>{post.name}</Text>
+            <Text style={{ ...styles.name, borderColor: theme.primaryColor, color: theme.textColor}}>{post.name}</Text>
             <Text style={{ color: theme.textColor }}>{post.data}</Text>
           </View>
           <Image style={styles.humor} source={{ uri: post.emoji }} />
@@ -254,18 +254,18 @@ export default function SinglePost({ route }) {
               ) : (
                 <Icon name='heart-o' size={20} color={theme.primaryColor} style={{ marginRight: 5 }} onPress={() => likeMethod(true)} />
               )}
-              <Text>{num}</Text>
+              <Text style={{color: theme.textColor}}>{num}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.iconButton}>
               <Icon5 name='comment' size={20} color={theme.primaryColor} style={{ marginLeft: 10, marginRight: 5 }} />
-              <Text>{commentsCount}</Text>
+              <Text style={{color: theme.textColor}}>{commentsCount}</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.commentsWrapper}>
             <Text style={{ ...styles.titleComment, color: theme.textColor }}>Comentários:</Text>
             <View
               style={styles.formComment} >
-              <TextInput onChangeText={(text) => setCommentText(text)} value={commentText} style={styles.inputComment} placeholder="Escreva um comentário." />
+              <TextInput placeholderTextColor={theme.textColor} onChangeText={(text) => setCommentText(text)} value={commentText} style={{...styles.inputComment, color: theme.textColor}} placeholder="Escreva um comentário." />
               <TouchableOpacity style={{ ...styles.buttonComment, backgroundColor: theme.primaryColor }} disabled={sendLoading} onPress={() => saveComment()}>
                 {sendLoading ? (
                   <ActivityIndicator size="small" color="#fff" />
@@ -281,7 +281,7 @@ export default function SinglePost({ route }) {
                 <Comment key={index} item={item} index={index} allComents={listComments} setListComments={setListComments} idPost={post.id} updateNumComment={updateNumComment} />
               ))
             ) : (
-              <Text>Nenhum comentário</Text>
+              <Text style={{color: theme.textColor}}>Nenhum comentário</Text>
             )}
           </View>
         </View>

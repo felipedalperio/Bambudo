@@ -6,6 +6,7 @@ const styles = StyleSheet.create({
         flex:1, 
     },
     categories:{
+        paddingTop:8,
         flexDirection:'row',
         paddingBottom:30,
         paddingHorizontal:10,

@@ -163,10 +163,10 @@ export default function Menu({ title, desc, emoji, cat, setDesc, setTitle, updat
 
 
   return (
-    <View style={styles.container}>
+    <View style={{...styles.container, backgroundColor: theme.bgNavigation}}>
       <TouchableOpacity style={{flexDirection:"row", alignItems:"center"}} onPress={onBeforeRemove}>
-        <Icon5 name="arrow-left" size={20} color="#222" style={{marginRight:10}}/>
-        <Text style={styles.title}>Postagem</Text>
+        <Icon5 name="arrow-left" size={20} color={theme.icon} style={{marginRight:10}}/>
+        <Text style={{...styles.title, color: theme.textColor}}>Postagem</Text>
       </TouchableOpacity>
       <TouchableOpacity style={{...styles.button, backgroundColor:theme.primaryColor}} onPress={newPost} disabled={loading}>
         {loading ? (

@@ -42,8 +42,14 @@ const NavigationStack = ({changeUserAuth}) => {
        <Stack.Screen
         name="Notification"
         lazy={true}
-        options={{ title: 'Notificações', headerTitleAlign: 'center' }}
         component={Notification}
+        options={{ title: 'Notificações', headerTitleAlign: 'center', headerStyle: {
+          backgroundColor: theme.bgColor
+          },headerTitleStyle: {
+            color: theme.textColor, // Cor do texto do título
+          }, 
+          headerTintColor: theme.textColor
+        }}
       />
     </Stack.Navigator>
   );

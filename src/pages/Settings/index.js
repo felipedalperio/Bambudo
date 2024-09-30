@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity, Image, TextInput, Alert, SafeAreaView, Ac
 import styles from './style'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import IconEvil from 'react-native-vector-icons/EvilIcons'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import { selectUser } from '../../store/userSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { changeUser } from '../../store/userSlice';
@@ -25,12 +26,13 @@ export default function Settings() {
   const userRedux = useSelector(selectUser);
   let dispatch = useDispatch()
   const route = useRoute();
-  const { theme, changeTheme } = useContext(ThemeContext);
-  const[color, setColor] = useState(null);
+  const { theme, changeTheme, darkMode, setDarkmode } = useContext(ThemeContext);
+  const [color, setColor] = useState(null);
   const setUser = setUserCurrent();
+  const [toggle, setToggle] = useState(darkMode)
 
   const handleThemeChange = newTheme => {
-    if(color != null){
+    if (color != null) {
       saveColor(newTheme)
       getColorNum()
     }
@@ -40,29 +42,36 @@ export default function Settings() {
     let num = colorNum.toString()
     AsyncStorage.setItem('color', num).then(() => {
       changeTheme(colorNum);
-    })
-    .catch((error) => {
-      Alert('Ops, Algo deu errado.')
+    }).catch((error) => {
+        Alert('Ops, Algo deu errado.')
     });
   }
 
-  function getColorNum(){
-      AsyncStorage.getItem('color').then((item)=>{
-        if(item){
-          setColor(parseInt(item))
-        }else{
-          setColor(0)
-        }
-      }).catch((error) => {
-        Alert('Ops, Algo deu errado.')
-        setColor(0)
-      });
+
+  function saveDarkMode() {
+    const value = !toggle;
+    setToggle(value); // Atualiza o estado
+    setDarkmode(value);
+    AsyncStorage.setItem('darkmode', JSON.stringify(value));
   }
 
-  
+  function getColorNum() {
+    AsyncStorage.getItem('color').then((item) => {
+      if (item) {
+        setColor(parseInt(item))
+      } else {
+        setColor(0)
+      }
+    }).catch((error) => {
+      Alert('Ops, Algo deu errado.')
+      setColor(0)
+    });
+  }
+
+
   useEffect(() => {
     handleThemeChange(color);
-  },[color])
+  }, [color])
 
   useEffect(() => {
     imagePicture()
@@ -70,8 +79,8 @@ export default function Settings() {
 
   useEffect(() => {
     setUser(userRedux.id);
-  
-  },[userRedux])
+
+  }, [userRedux])
 
   const pickImage = async () => {
     // Verifique se você tem permissão para acessar a galeria de imagens
@@ -80,7 +89,7 @@ export default function Settings() {
       Alert.alert('Desculpe, precisamos de permissões para acessar a galeria.');
       return;
     }
-  
+
     // Abre a biblioteca de imagens
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -88,7 +97,7 @@ export default function Settings() {
       aspect: [4, 3],
       quality: 1
     });
-  
+
     // Verifica se a URI da imagem foi retornada
     if (!result.canceled && result.assets && result.assets.length > 0) {
       const { uri } = result.assets[0];
@@ -98,23 +107,23 @@ export default function Settings() {
       Alert.alert('Algo deu errado ou você não selecionou nenhuma imagem.');
     }
   };
-  
-  const uploadImage = async (imageUp) => {
-      setUploading(true);
-      const response = await fetch(imageUp.uri);
-      const blob = await response.blob();
-      const filename = userRedux.id;
-      var ref = firebase.storage().ref().child(filename).put(blob);
 
-      try {
-        await ref;
-        setUploading(false);
-        updateUser();
-        Alert.alert('Dados Atualizados.')
-      } catch (e) {
-        Alert.alert('Algo deu errado.')
-        setUploading(false);
-      }
+  const uploadImage = async (imageUp) => {
+    setUploading(true);
+    const response = await fetch(imageUp.uri);
+    const blob = await response.blob();
+    const filename = userRedux.id;
+    var ref = firebase.storage().ref().child(filename).put(blob);
+
+    try {
+      await ref;
+      setUploading(false);
+      updateUser();
+      Alert.alert('Dados Atualizados.')
+    } catch (e) {
+      Alert.alert('Algo deu errado.')
+      setUploading(false);
+    }
   }
 
   const updateUser = async () => {
@@ -142,7 +151,7 @@ export default function Settings() {
 
   const updateNameUser = async () => {
     let nome = removeDuplicateSpaces(name);
-    if(nome != ""){
+    if (nome != "") {
       setChoose(true)
       firebase.firestore().collection('users').doc(userRedux.id).update({
         name: nome
@@ -173,13 +182,13 @@ export default function Settings() {
   function logout() {
     AsyncStorage.setItem('userId', "").then(() => {
       dispatch(changeUser(
-          {
-              id: '',
-              email: '',
-              name: '',
-              picture: '',
-              postsLiked: '',
-          }
+        {
+          id: '',
+          email: '',
+          name: '',
+          picture: '',
+          postsLiked: '',
+        }
       ))
       firebase.auth().signOut().then(() => {
         route.params.changeUserAuth(false)
@@ -190,15 +199,15 @@ export default function Settings() {
 
   }
 
-  const changeShow = () =>{
+  const changeShow = () => {
     setShow(!show)
   }
 
   return (
     <View style={styles.container}>
-      <View style={styles.top}>
-        <Image style={{...styles.picture, borderColor:theme.primaryColor}} source={image} />
-        <TouchableOpacity style={{...styles.icon, backgroundColor:theme.primaryColor}} onPress={pickImage} disabled={uploading}>
+      <View style={{ ...styles.top, backgroundColor: theme.bgColor }}>
+        <Image style={{ ...styles.picture, borderColor: theme.primaryColor }} source={image} />
+        <TouchableOpacity style={{ ...styles.icon, backgroundColor: theme.primaryColor }} onPress={pickImage} disabled={uploading}>
           {uploading ? (
             <ActivityIndicator size="small" color="#fff" />
 
@@ -207,26 +216,40 @@ export default function Settings() {
           )}
         </TouchableOpacity>
       </View>
-      <View style={{...styles.bottom, backgroundColor:theme.primaryColor}}>
+      <View style={{ ...styles.bottom, backgroundColor: theme.primaryColor }}>
         <Text style={styles.label}>Nome do Usuário</Text>
-        <TextInput onChangeText={(text) => setName(text)} style={styles.name} placeholder="Digite seu nome" type="text" value={name} maxLength={20}  />
+        <TextInput onChangeText={(text) => setName(text)} style={styles.name} placeholder="Digite seu nome" type="text" value={name} maxLength={20} />
         <TouchableOpacity style={styles.save} onPress={updateNameUser} disabled={choose}>
           {choose ? (
-            <ActivityIndicator size="small" color={theme.primaryColor}/>
-          ): (
-            <Text style={{...styles.textSave, color:theme.primaryColor}}> Salvar </Text>
+            <ActivityIndicator size="small" color={theme.primaryColor} />
+          ) : (
+            <Text style={{ ...styles.textSave, color: theme.primaryColor }}> Salvar </Text>
           )}
         </TouchableOpacity>
+        <View>
+          <Text style={styles.titleColor}>DarkMode</Text>
+          <View style={styles.toggle}>
+            <TouchableOpacity activeOpacity={1} onPress={() => saveDarkMode()}
+              style={{
+                width: 24, height: 24, backgroundColor: theme.primaryColor,
+                marginHorizontal: 2,
+                borderRadius: 24, alignItems: "center", justifyContent: "center",
+                alignSelf: toggle ? "flex-end" : "flex-start"
+              }}>
+              <Ionicons name={toggle ? "moon" : "sunny"} color="#fff" />
+            </TouchableOpacity>
+          </View>
+        </View>
         <TouchableOpacity style={styles.wrapperColor} onPress={changeShow}>
-            <Text style={styles.titleColor}>Cor do App</Text>
-            <View style={styles.boxColor}>
-              <View style={styles.paleta}>
-                <View style={{...styles.box, backgroundColor: theme.primaryColorLight}}></View>
-                <View style={{...styles.box, backgroundColor: theme.primaryColor, marginHorizontal:5}}></View>
-                <View style={{...styles.box, backgroundColor: theme.primaryColorDark}}></View>
-              </View>
-              <IconEvil name='arrow-down' size={26} color="#515151"/>
+          <Text style={styles.titleColor}>Cor do App</Text>
+          <View style={styles.boxColor}>
+            <View style={styles.paleta}>
+              <View style={{ ...styles.box, backgroundColor: theme.primaryColorLight }}></View>
+              <View style={{ ...styles.box, backgroundColor: theme.primaryColor, marginHorizontal: 5 }}></View>
+              <View style={{ ...styles.box, backgroundColor: theme.primaryColorDark }}></View>
             </View>
+            <IconEvil name='arrow-down' size={26} color="#515151" />
+          </View>
         </TouchableOpacity>
         {uploading && (
           <View style={styles.up}>
@@ -239,7 +262,7 @@ export default function Settings() {
           <Icon name="sign-out" size={26} color="white" />
         </TouchableOpacity>
       </View>
-        {show && (<PalletaCores show={show} setShow={setShow} setColor={setColor} />)}
+      {show && (<PalletaCores show={show} setShow={setShow} setColor={setColor} />)}
     </View>
   )
 }

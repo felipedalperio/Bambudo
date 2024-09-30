@@ -1,16 +1,19 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { selectUser } from '../../store/userSlice';
 import { useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useEffect, useState,useContext} from 'react';
 import {  useNavigation, useRoute } from '@react-navigation/native';
 import IconFeather from 'react-native-vector-icons/Feather'
 import firebase from '../../config/firebaseconfig';
+import { ThemeContext } from '../../store/ThemeContext'
 
 export default function Header() {
     const [image, setImage] = useState('');
+    const { theme } = useContext(ThemeContext);
     const userRedux = useSelector(selectUser);
     let navigation = useNavigation();
     let route = useRoute()
+    
     //const routeName = getFocusedRouteNameFromRoute(route) 
     const [newNotification, setNewNotification] = useState(false);
 
@@ -59,12 +62,12 @@ export default function Header() {
         }
     }
     return (
-        <View style={styles.container}>
-            <Text style={styles.texto}>{route.name}</Text>
+        <View style={{...styles.container, backgroundColor:theme.bgNavigation}}>
+            <Text style={{...styles.texto, color: theme.textColor}}>{route.name}</Text>
 
             <View style={styles.right}>
                 <TouchableOpacity onPress={() => goNotification()} style={{marginRight:20}}>
-                    <IconFeather name="bell" size={25}  />
+                    <IconFeather name="bell" size={25} color={theme.icon} />
                     <View style={{...styles.conter, opacity: newNotification ? 1 : 0}}/>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => goSettings()}>

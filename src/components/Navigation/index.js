@@ -29,6 +29,7 @@ const Tabs = ({changeUserAuth}) => {
         showLabel: false,
         tabBarStyle: {
           height: 70,
+          backgroundColor: theme.bgNavigation,
         },
         header: () => <Header  />,
       }}
@@ -37,14 +38,14 @@ const Tabs = ({changeUserAuth}) => {
         {
           unmountOnBlur: false,
           tabBarIcon: ({ focused }) => (
-            <IconAwesome name="pencil" size={30} color={focused ? 'white' : '#7A7A7A'} style={focused && { backgroundColor: theme.primaryColor, padding: 10, borderRadius: 30 }} />
+            <IconAwesome name="pencil" size={30} color={focused ? 'white' : theme.icon} style={focused && { backgroundColor: theme.primaryColor, padding: 10, borderRadius: 30 }} />
           )
         }} />
       <Tab.Screen name="Liked" component={Liked} lazy={true}  options={
         {
           unmountOnBlur: false,
           tabBarIcon: ({ focused }) => (
-            <IconAwesome name="heart" size={30} color={focused ? 'white' : '#7A7A7A'} style={focused && { backgroundColor: theme.primaryColor, padding: 10, borderRadius: 30 }} />
+            <IconAwesome name="heart" size={30} color={focused ? 'white' : theme.icon} style={focused && { backgroundColor: theme.primaryColor, padding: 10, borderRadius: 30 }} />
           )
         }}
       />
@@ -68,11 +69,11 @@ const Tabs = ({changeUserAuth}) => {
           if (routeName === 'SinglePost') {
             return { display: "none" }
           }
-          return {height: 70}
+          return {height: 70, backgroundColor: theme.bgNavigation,}
         })(route),
 
         tabBarIcon: ({ focused }) => (
-          <Icon name="home" size={30} color={focused ? 'white' : '#7A7A7A'} style={focused && { backgroundColor: theme.primaryColor, padding: 10, borderRadius: 30 }} />
+          <Icon name="home" size={30} color={focused ? 'white' : theme.icon} style={focused && { backgroundColor: theme.primaryColor, padding: 10, borderRadius: 30 }} />
         )
         
       })}
@@ -83,7 +84,7 @@ const Tabs = ({changeUserAuth}) => {
         {
           unmountOnBlur: true,
           tabBarIcon: ({ focused }) => (
-            <Icon name="settings" size={30} color={focused ? 'white' : '#7A7A7A'} style={focused && { backgroundColor: theme.primaryColor, padding: 10, borderRadius: 30 }} />
+            <Icon name="settings" size={30} color={focused ? 'white' : theme.icon} style={focused && { backgroundColor: theme.primaryColor, padding: 10, borderRadius: 30 }} />
           )
         }} />
     </Tab.Navigator>

@@ -85,10 +85,10 @@ export default function Post({ item, database, post, setPost}) {
     }
   };
   return (
-    <TouchableOpacity style={styles.post} onPress={() => goSinglePost()}>
+    <TouchableOpacity style={{...styles.post, backgroundColor:theme.cardColor}} onPress={() => goSinglePost()}>
       <View style={styles.catGroup}>
         <View style={styles.catLeft}>
-          <Text style={{fontWeight: lock ? 'bold' : '400'}}>{lock ? 'Privado' : 'Público'}</Text>
+          <Text style={{fontWeight: lock ? 'bold' : '400', color: theme.textColor}}>{lock ? 'Privado' : 'Público'}</Text>
         </View>
         <View style={styles.catRight}> 
           <TouchableOpacity onPress={() => removePost(item.id)}>
@@ -109,19 +109,19 @@ export default function Post({ item, database, post, setPost}) {
             <Image style={styles.imgProfile} source={require('../../storage/default.png')} />
           )
         }
-        <Text style={{ ...styles.name, borderColor: theme.primaryColor }}>{item.name}</Text>
+        <Text style={{ ...styles.name, borderColor: theme.primaryColor, color: theme.textColor }}>{item.name}</Text>
         <Image style={styles.humor} source={{ uri: item.emoji }} />
       </View>
       <View style={styles.content}>
         <Text style={{ ...styles.title, color: theme.primaryColorDark2 }}>{item.title}</Text>
-        <Text style={{ ...styles.desc, color: theme.textColor }} numberOfLines={readMore} ellipsizeMode="tail" onTextLayout={onTextLayout}>{item.desc}</Text>
+        <Text style={{ ...styles.desc, color: theme.textColor2 }} numberOfLines={readMore} ellipsizeMode="tail" onTextLayout={onTextLayout}>{item.desc}</Text>
         <TouchableOpacity onPress={() => readMoreClick()}>
           <Text style={{ ...styles.more, color: theme.primaryColorDark2, display:`${showReadMore ? 'flex' : 'none'}` }}>{readMore > 9? 'Ler Menos' : 'Ler Mais'}</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.infoPost}>
         <View style={styles.left}>
-          <Text>{item.data}</Text>
+          <Text style={{color: theme.textColor2}}>{item.data}</Text>
         </View>
         <View style={styles.right}>
           <TouchableOpacity style={styles.iconButton} onPress={() => likePostMethod(!like)}>
@@ -130,9 +130,9 @@ export default function Post({ item, database, post, setPost}) {
             ) : (
               <Icon name='heart-o' size={20} color={theme.primaryColor} style={{ marginRight: 5 }} />
             )}
-            <Text>{num}</Text>
+            <Text style={{color: theme.textColor}}>{num}</Text>
             <Icon5 name='comment-alt' size={20} color={theme.primaryColor} style={{ marginLeft: 10, marginRight: 5 }} />
-            <Text>{commentsCount}</Text>
+            <Text style={{color: theme.textColor}}>{commentsCount}</Text>
           </TouchableOpacity>
         </View>
       </View>

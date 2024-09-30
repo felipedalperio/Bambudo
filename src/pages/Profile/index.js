@@ -155,7 +155,7 @@ export default function Profile() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={{...styles.container, backgroundColor:theme.bgColor}}>
       <View style={{ ...styles.titleGroup, backgroundColor: theme.primaryColor }}>
         <Text style={styles.textProfile}>Meus Posts</Text>
         <Icon name='pencil' size={20} color="white" style={{ marginLeft: 10 }} />
